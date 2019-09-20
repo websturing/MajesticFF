@@ -1,0 +1,1259 @@
+﻿@model AgentBookVue.Models.Bookings
+
+
+@{
+    ViewBag.Title = "PendingBooking";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts{
+    <script>
+
+        Vue.use(VueLoading);
+        Vue.use(VTooltip);
+        Vue.use(window.vuelidate.default);
+        const { required, minLength } = window.validators;
+
+        var mainVue = new Vue({
+            el: "#VueApp",
+            data :{
+                isOpen :true,
+                DataId : null,
+                payments : null,
+                journeyTypeName : null,
+                pending: {
+                    agent: '',
+                    DepartTrips : '',
+                    ReturnTrips : '',
+                    price : '',
+                    passanger: [],
+                },
+                CountryList:null,
+                url: {
+                    GetPendingData : '/Bookings/GetPendingBooking',
+                    GetCountryList : '/Bookings/GetCountryList',
+                    GetPassanger : '/Bookings/GetPassanger',
+                    AddPax : '/Bookings/AddPax',
+                    GetPaxs : '/Bookings/GetPaxs',
+                    EditPaxs : '/Bookings/EditPax',
+                    GetJourney :'/Bookings/GetJourney',
+                    GetSchedule : '/Bookings/GetSchedule',
+                },
+                show : {
+                    FormEdit : false,
+                    FormAdd : false,
+                    ReturnTrips : false,
+                    tableSchedule : false
+                },
+                typeahead:[],
+                add : {
+                    passportNo : null,
+                    passportName : null,
+                    BirthDate : null,
+                    Gender : null,
+                    Nationality : "picks",
+                    Issuedate : null,
+                    ExpireDate : null,
+                    DepartTrip : null,
+                    ReturnTrip : null,
+                },
+                error : {
+                    dpickerBirthDate :{
+                        msg : 'Invalid Date Format',
+                        notif : false,
+                        input : false,
+                    },
+                    dpickerIssueDate :{
+                        msg : 'Invalid Date Format',
+                        notif : false,
+                        input : false,
+                    },
+                    dpickerExpiredDate :{
+                        msg : 'Invalid Date Format',
+                        notif : false,
+                        input : false,
+                    }
+                },
+                Travel :{
+                    TripsPending : null,
+                    Schedule : [],
+                    classe : null,
+                    TravelDate : null,
+                    TravelTime : null,
+                    Journey:null,
+                },
+                ScheduleTrips:[],
+
+
+            },
+            created(){
+               this.DataId =  $("#IdDataBook").val();
+                this.ServerPendingData();
+                this.ServerCountryList();
+                this.ScheduleTrip();
+            },
+            mounted(){
+            this.datePickerBirthDate();
+            this.typeaheadTwitter();
+            this.datePickerIssue();
+            this.datePickerExpiered();
+            $('#TravelDate').pickadate({
+                selectYears: true,
+                selectMonths: true,
+                format: 'dddd, dd mmmm yyyy',
+                formatSubmit: 'yyyy/mm/dd',
+                min: true,
+                max: 40,
+                onSet: (context) => {
+
+                    var today = this.FormatedDateWithDays(context.select);
+                    this.form.journey.TravelDateDepart = today;
+
+                    if(this.form.journeyType == 2){
+                        this.form.journey.TravelDateReturn =  this.form.journey.TravelDateDepart
+                    }
+
+
+        },
+        });
+        },
+            methods: {
+                ScheduleTrip(){
+                        axios
+                        .post(this.url.GetJourney)
+                        .then( response => {
+                            this.ScheduleTrips = response.data
+
+                            var $prevGroup, prevGroupName;
+                        var option;
+                        var number = 0;
+                        $.each(response.data, function () {
+                            if (prevGroupName != this.DepartCountry) {
+                                $prevGroup = $('<optgroup />').prop('label', this.DepartCountry).appendTo('.TripJourneyAll');
+
+                            }
+
+
+                            $("<option />").val(number).text(this.JourneyName).appendTo($prevGroup);
+                            prevGroupName = this.DepartCountry;
+                            number++;
+
+                        });
+
+                    });
+            },
+                GetScheduleTrips(){
+                    axios
+                    .post(this.url.GetSchedule, {
+                        TotalPax : "3",
+                        JourneyType : "1",
+                        IsReturnOpenTicket : 0,
+                        DepartPort :  this.Travel.Journey.DepartPort,
+                        ArrivalPort : this.Travel.Journey.ArrivalPort,
+                        TravelDateBC :  this.Travel.TravelDate,
+                        ReturnDepartPort : "",
+                        ReturnArrivalPort : "",
+                        ReturnTravelDateBC : this.Travel.TravelDate,
+
+                    })
+                    .then( response => {
+                        let data = JSON.stringify(response.data)
+
+                        this.Travel.Schedule = response.data[0].DepartTrips;
+                        
+                });
+
+               
+                },
+                FormatedDateWithDays(e){
+                    var weekdays = new Array(7);
+                    weekdays[0] = "Sunday";
+                    weekdays[1] = "Monday";
+                    weekdays[2] = "Tuesday";
+                    weekdays[3] = "Wednesday";
+                    weekdays[4] = "Thursday";
+                    weekdays[5] = "Friday";
+                    weekdays[6] = "Saturday";
+
+                    var monthNames = ["January", "February", "March", "April", "May","June","July", "August", "September", "October", "November","December"];
+
+
+
+                    var today = new Date(e);
+                    var days = today.getDay();
+                    var dd = String(today.getDate()).padStart(2, '0');
+                    var mm = String(today.getMonth()); //January is 0!
+                    var yyyy = today.getFullYear();
+                    var h = today.getHours();
+                    var m = today.getMinutes();
+                    var d = today.getSeconds();
+
+                    today = weekdays[days] + ', '+ dd + ' ' + monthNames[mm] + ' ' + yyyy;
+                    return today;
+                },
+                ServerPendingData(){
+                    axios
+                    .post(this.url.GetPendingData,{
+                        Id : this.DataId
+                    })
+                    .then( response => {
+                        var Data = JSON.parse(response.data);
+                    var NewData;
+                    this.pending = JSON.parse(response.data);
+                    this.pending.passanger = [];
+                    for(var i = 0; i < Data.passanger.length; i++){
+
+                        NewData = {
+                            passportNo : Data.passanger[i].passportNo,
+                            passportName : Data.passanger[i].passportName,
+                            BirthDate : Data.passanger[i].BirthDate,
+                            Gender : Data.passanger[i].Gender,
+                            Nationality : Data.passanger[i].Nationality,
+                            Issuedate : Data.passanger[i].Issuedate,
+                            ExpireDate :Data.passanger[i].ExpireDate,
+                            DepartTrip : Data.passanger[i].DepartTrip,
+                            DepartTripCode : Data.passanger[i].DepartTripCode,
+                            ReturnTrip : Data.passanger[i].ReturnTrip,
+                            ReturnTripCode: Data.passanger[i].ReturnTripCode,
+                            ShowInput : false,
+                            ShowText : true,
+                            error  : {
+                                BirthDate : false,
+                                ExpireDate : false,
+                                Issuedate : false,
+                            }
+                        }
+
+                        this.pending.passanger.push(NewData);
+
+                    }
+
+
+                    if(this.pending.ReturnTrips != null){
+                        this.show.ReturnTrips = true
+                    }
+                    this.PaymentsKet();
+                    this.JourneyTypeName();
+
+
+                });
+            },
+                ServerCountryList(){
+                        axios
+                        .post(this.url.GetCountryList)
+                        .then( response => {
+                            this.CountryList = response.data;
+                    });
+            },
+                PaymentsKet(){
+
+                var includedTicket = this.pending.agent.payments.isIncludeTicketPrice;
+                var Departfee = this.pending.agent.payments.isIncludeDepartTax;
+                var Returnfee = this.pending.agent.payments.isIncludeReturnTax;
+
+                if(includedTicket == true && Departfee == true){
+                    this.payments = "Included Ticket Price, Depart Fee"
+                }
+                if(includedTicket == true && Departfee == true && Returnfee == true){
+                    this.payments = "Included Ticket Price, Depart Fee, Return Fee"
+                }
+
+
+
+
+
+            },
+                JourneyTypeName(){
+                        if(this.pending.agent.journeyType == 1){
+                            this.journeyTypeName = "One Trip"
+                        }
+                        else if(this.pending.agent.journeyType == 2){
+                            this.journeyTypeName = "Round Trip"
+                        }
+                    },
+                typeaheadTwitter(){
+
+                        axios
+                            .post(this.url.GetPassanger)
+                            .then( response => {
+                                var Data = JSON.parse(response.data);
+
+                        console.log(Data);
+
+                        this.typeahead = Data;
+
+                        var dataSource = new Bloodhound({
+                            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('passportNo', 'passportName'),
+                            queryTokenizer: Bloodhound.tokenizers.whitespace,
+                            local: Data
+
+                        });
+
+                        dataSource.initialize();
+
+                        let inputEl = $('.typeahead');
+                        //#region formInline
+                        inputEl.typeahead({
+                            minLength: 2,
+                            highlight: true
+                        }, {
+                            name: 'countries',
+                            display: function(item){
+                                //alert(item.country);
+                                return item.passportNo},
+                            source: dataSource.ttAdapter(),
+
+
+                        });
+
+                        inputEl.on('typeahead:select', (e, item) => {
+
+                            this.add.passportNo = item.passportNo;
+                        this.add.passportName = item.passportName;
+                        this.add.BirthDate = item.BirthDate;
+                        this.add.Gender = item.Gender;
+                        this.add.Nationality = item.Nationality;
+                        this.add.Issuedate = item.Issuedate;
+                        this.add.ExpireDate = item.ExpireDate;
+                    });
+            //#endregion
+
+
+
+            });
+
+
+
+
+            },
+                datePickerBirthDate(i){
+                    var numb = i;
+                    let DP =   $('.IEB').datepicker({
+                        showOtherMonths: true,
+                        selectOtherMonths: true,
+                        showAnim: "clip",
+                        dateFormat: "mm/dd/yy",
+                        minDate: "01/01/1925",
+                        maxDate: "31/12/2050",
+                        changeMonth: true,
+                        changeYear: true,
+                        yearRange: "1925:2050",
+                        regional: "it",
+                        onSelect: (date) => {
+                            this.add.BirthDate = date
+                            this.error.dpicker.notif = false;
+                    this.error.input = false;
+
+                },
+
+                });
+                DP.on('focus', (e) =>{
+
+                });
+                DP.on('change', (e) =>{ // This check is for dd/mm/yyyy format but can be easily adapted to any other
+                    var add = this.show.FormAdd;
+                var edit = this.show.FormEdit;
+                if(e.currentTarget.value.match(/\d{1,2}[^\d]\d{1,2}[^\d]\d{4,4}/gi) == null){
+
+
+
+
+                    if(add == true){
+                        this.error.dpickerBirthDate.notif = true;
+                        this.error.dpickerBirthDate.input = true;
+                        this.add.BirthDate = "invalid"
+                    }
+                    else if(edit == true){
+                        this.error.dpickerBirthDate.notif = false;
+                        this.error.dpickerBirthDate.input = false;
+                        this.add.BirthDate = "invalid"
+                        this.pending.passanger[numb].error.BirthDate = true
+                    }
+                }
+                else {
+                    if(add = true){
+                        this.error.dpickerBirthDate.notif = false;
+                        this.error.dpickerBirthDate.input = false;
+                    }
+                    if(edit == true){
+                        this.pending.passanger[numb].error.BirthDate = false
+
+                    }
+
+                    var t = e.currentTarget.value.split(/[^\d]/);
+                    var dd = parseInt(t[1], 10);
+                    var m0 = parseInt(t[0], 10) - 1; // Month in JavaScript Date object is 0-based
+                    var yyyy = parseInt(t[2], 10);
+                    var d = new Date(yyyy, m0, dd); // new Date(2017, 13, 32) is still valid
+                    if(d.getMonth() != m0 || d.getDate() != dd || d.getFullYear() != yyyy)
+                        alert('Invalid date value');
+                }
+                });
+                },
+                datePickerIssue(i){
+                    var add = this.show.FormAdd;
+                    var edit = this.show.FormEdit;
+                    let DP =   $('.issuePassport').datepicker({
+                        showOtherMonths: true,
+                        selectOtherMonths: true,
+                        showAnim: "clip",
+                        dateFormat: "mm/dd/yy",
+                        minDate: "01/01/1925",
+                        maxDate: "31/12/2050",
+                        changeMonth: true,
+                        changeYear: true,
+                        yearRange: "1925:2050",
+                        regional: "it",
+                        onSelect: (date) => {
+                            this.add.Issuedate = date
+                            this.error.dpicker.notif = false;
+                    this.error.input = false;
+
+                },
+
+                });
+                DP.on('focus', (e) =>{
+
+                });
+                DP.on('change', (e) =>{ // This check is for dd/mm/yyyy format but can be easily adapted to any other
+                    if(e.currentTarget.value.match(/\d{1,2}[^\d]\d{1,2}[^\d]\d{4,4}/gi) == null){
+
+
+
+
+                    if(add == true){
+                        this.error.dpickerIssueDate.notif = true;
+                        this.error.dpickerIssueDate.input = true;
+                        this.add.Issuedate = "invalid"
+                    }
+                if(edit == true){
+                    this.error.dpickerIssueDate.notif = false;
+                    this.error.dpickerIssueDate.input = false;
+                    this.add.Issuedate = "invalid"
+                    this.pending.passanger[i].error.Issuedate = true
+                }
+                }
+                else {
+
+
+                    if(add = true){
+                        this.error.dpickerIssueDate.notif = false;
+                        this.error.dpickerIssueDate.input = false;
+                    }
+                    if(edit == true){
+                        this.pending.passanger[i].error.Issuedate = false
+                    }
+
+                    var t = e.currentTarget.value.split(/[^\d]/);
+                    var dd = parseInt(t[1], 10);
+                    var m0 = parseInt(t[0], 10) - 1; // Month in JavaScript Date object is 0-based
+                    var yyyy = parseInt(t[2], 10);
+                    var d = new Date(yyyy, m0, dd); // new Date(2017, 13, 32) is still valid
+                    if(d.getMonth() != m0 || d.getDate() != dd || d.getFullYear() != yyyy)
+                        alert('Invalid date value');
+                }
+                });
+                },
+                datePickerExpiered(i){
+                    let DP =   $('.expiredPassport').datepicker({
+                        showOtherMonths: true,
+                        selectOtherMonths: true,
+                        showAnim: "clip",
+                        dateFormat: "mm/dd/yy",
+                        minDate: "01/01/1925",
+                        maxDate: "31/12/2050",
+                        changeMonth: true,
+                        changeYear: true,
+                        yearRange: "1925:2050",
+                        regional: "it",
+                        onSelect: (date) => {
+                            this.add.ExpireDate = date
+                            this.error.dpicker.notif = false;
+                    this.error.input = false;
+
+                },
+
+                });
+                var add = this.show.FormAdd;
+                var edit = this.show.FormEdit;
+                DP.on('focus', (e) =>{
+
+                });
+                DP.on('change', (e) =>{ // This check is for dd/mm/yyyy format but can be easily adapted to any other
+
+                    if(e.currentTarget.value.match(/\d{1,2}[^\d]\d{1,2}[^\d]\d{4,4}/gi) == null){
+
+
+                    if(add == true){
+                        this.error.dpickerExpiredDate.notif = true;
+                        this.error.dpickerExpiredDate.input = true;
+                        this.add.ExpireDate = "invalid"
+                    }
+                else if(edit == true){
+                    this.error.dpickerExpiredDate.notif = false;
+                    this.error.dpickerExpiredDate.input = false;
+                    this.add.ExpireDate = "invalid"
+                    this.pending.passanger[i].error.ExpireDate = true
+                }
+                }
+                else {
+                    if(add = true){
+                        this.error.dpickerExpiredDate.notif = false;
+                        this.error.dpickerExpiredDate.input = false;
+                    }
+                    if(edit == true){
+                        this.pending.passanger[i].error.ExpireDate = false;
+                    }
+
+                    var t = e.currentTarget.value.split(/[^\d]/);
+                    var dd = parseInt(t[1], 10);
+                    var m0 = parseInt(t[0], 10) - 1; // Month in JavaScript Date object is 0-based
+                    var yyyy = parseInt(t[2], 10);
+                    var d = new Date(yyyy, m0, dd); // new Date(2017, 13, 32) is still valid
+                    if(d.getMonth() != m0 || d.getDate() != dd || d.getFullYear() != yyyy)
+                        alert('Invalid date value');
+                }
+                });
+                },
+                status(validation) {
+                    return {
+                        error: validation.$error,
+                        dirty: validation.$dirty
+                    }
+                },
+
+                addPax(){
+                        this.$v.$touch()
+                        if (this.$v.$invalid) {
+                            iziToast.show({
+                                title: '',
+                                message: 'these fields must not be empty',
+                                backgroundColor: 'red',
+                                messageColor: 'white',
+                                position: 'center',
+                            });
+                        }
+                        else{
+
+                            var NewData = [{
+                                passportNo : this.add.passportNo,
+                                passportName : this.add.passportName,
+                                BirthDate : this.add.BirthDate,
+                                Gender : this.add.Gender,
+                                Nationality : this.add.Nationality,
+                                Issuedate : this.add.Issuedate,
+                                ExpireDate : this.add.ExpireDate,
+                                DepartTrip : this.pending.DepartTrips,
+                                DepartTripCode : this.add.DepartTripCode,
+                                ReturnTrip : this.pending.ReturnTrips,
+                                ReturnTripCode: this.add.ReturnTripCode,
+                                ShowInput : false,
+                                ShowText : true,
+                                error  : {
+                                    BirthDate : false,
+                                    ExpireDate : false,
+                                    Issuedate : false,
+                                }
+                            }];
+                            var dataPendingpaxs = this.pending.passanger;
+
+                            if(dataPendingpaxs.length < 0){
+                                axios
+                                   .post(this.url.AddPax, {
+                                       id : this.DataId,
+                                       dataJSon : JSON.stringify(NewData),
+
+                                   })
+                                   .then( response => {
+                                       dataPendingpaxs.push(NewData[0])
+                                       this.$v.$reset()
+                                    this.$refs.PassportNo.focus()
+                                    this.clearAddObject()
+                            });
+                        }
+                            else{
+                                var valObj = dataPendingpaxs.filter((elem) => {
+                                    for(var i = 0; i < dataPendingpaxs.length; i++){
+                                        if(elem.passportNo == this.add.passportNo)
+                                            return elem.passportNo;
+
+                                    }
+
+                            });
+
+                            if(valObj.length == 0){
+
+                                axios
+                                   .post(this.url.AddPax, {
+                                       id : this.DataId,
+                                       dataJSon : JSON.stringify(NewData),
+
+                                   })
+                                   .then( response => {
+                                       dataPendingpaxs.push(NewData[0])
+                                       this.$v.$reset()
+                                        this.$refs.PassportNo.focus()
+                                        this.clearAddObject()
+                            });
+                            }
+                            else{
+                                alert("Already Exist");
+                                this.$v.$reset()
+                                this.$refs.PassportNo.focus()
+                                this.clearAddObject()
+                            }
+
+            }
+
+            }
+                },
+                editPaxs(e){
+                var NewData = [{
+                    passportNo : this.add.passportNo,
+                    passportName : this.add.passportName,
+                    BirthDate : this.add.BirthDate,
+                    Gender : this.add.Gender,
+                    Nationality : this.add.Nationality,
+                    Issuedate : this.add.Issuedate,
+                    ExpireDate : this.add.ExpireDate,
+                    DepartTrip : this.pending.DepartTrips,
+                    DepartTripCode : this.add.DepartTripCode,
+                    ReturnTrip : this.pending.ReturnTrips,
+                    ReturnTripCode: this.add.ReturnTripCode,
+                }];
+                this.$v.$touch()
+                if (this.$v.$invalid) {
+                    iziToast.show({
+                        title: '',
+                        message: 'these fields must not be empty',
+                        backgroundColor: 'red',
+                        messageColor: 'white',
+                        position: 'center',
+                    });
+                    this.$nextTick(() => {
+                        this.$refs.imts[e].focus();
+                });
+            }
+            else{
+
+                            axios
+            .post(this.url.EditPaxs, {
+                id : this.DataId,
+                dataJSon : JSON.stringify(NewData),
+                rows : e
+
+            })
+            .then( response => {
+                iziToast.show({
+                    title: '',
+                    message: 'Update Pax Success',
+                    backgroundColor: 'green',
+                    messageColor: 'white',
+                    position: 'topRight',
+                });
+            this.$v.$reset()
+            this.CloseFormEdit();
+            this.pending.passanger[e].passportNo = this.add.passportNo
+            this.pending.passanger[e].passportName = this.add.passportName,
+            this.pending.passanger[e].BirthDate = this.add.BirthDate,
+            this.pending.passanger[e].Gender = this.add.Gender,
+            this.pending.passanger[e]. Nationality = this.add.Nationality,
+            this.pending.passanger[e].Issuedate = this.add.Issuedate,
+            this.pending.passanger[e].ExpireDate = this.add.ExpireDate,
+            this.pending.passanger[e].DepartTrip = this.pending.DepartTrips,
+            this.pending.passanger[e].DepartTripCode = this.add.DepartTripCode,
+            this.pending.passanger[e].ReturnTrip = this.pending.ReturnTrips,
+            this.pending.passanger[e].ReturnTripCode = this.add.ReturnTripCode
+            });
+            }
+            },
+                deletePaxs(e){
+
+            },
+
+                clearAddObject(){
+                        this.add.passportNo = "",
+                        this.add.passportName = "",
+                        this.add.BirthDate = "",
+                        this.add.Gender = "",
+                        this.add.Nationality = "picks",
+                        this.add.Issuedate = "",
+                        this.add.ExpireDate = "",
+                        this.add.DepartTrip = "",
+                        this.add.ReturnTrip = ""
+                    },
+                clearTooltip(){
+                        this.error.dpickerBirthDate.notif = false;
+                        this.error.dpickerBirthDate.input = false;
+                        this.error.dpickerIssueDate.notif = false;
+                        this.error.dpickerIssueDate.input = false;
+                        this.error.dpickerExpiredDate.notif = false;
+                        this.error.dpickerExpiredDate.input = false;
+                    },
+
+                showForm(){
+
+                        this.clearTooltip();
+                        this.show.FormEdit = false;
+                        this.$v.$reset()
+                        this.clearAddObject()
+
+                        for(var i = 0; i < this.pending.passanger.length; i++ ){
+                            this.pending.passanger[i].ShowInput = false
+                            this.pending.passanger[i].ShowText = true
+                        }
+                        if(this.show.FormAdd == true){
+                            this.show.FormAdd = false
+                        }
+                        else{
+                            this.show.FormAdd = true;
+
+
+                        }
+                        this.$nextTick(() => {
+                            this.$refs.PassportNo.focus();
+                    });
+
+            },
+                showFormEdit(e){
+
+
+                for(var i = 0; i < this.pending.passanger.length; i++ ){
+                    this.pending.passanger[i].ShowInput = false
+                    this.pending.passanger[i].ShowText = true
+                    this.pending.passanger[i].error.BirthDate = false
+                    this.pending.passanger[i].error.Issuedate = false
+                    this.pending.passanger[i].error.ExpireDate = false
+                }
+
+                this.datePickerBirthDate(e);
+                this.datePickerIssue(e);
+                this.datePickerExpiered(e);
+                this.show.FormEdit = true;
+                this.clearTooltip();
+
+                this.$v.$reset()
+                this.clearAddObject()
+
+
+                if( this.pending.passanger[e].ShowInput == true){
+                    this.pending.passanger[e].ShowInput = false
+                    this.pending.passanger[e].ShowText = true
+                }
+                else{
+                    this.pending.passanger[e].ShowInput = true
+                    this.pending.passanger[e].ShowText = false
+                    this.show.FormAdd = false
+                    this.add.passportNo =  this.pending.passanger[e].passportNo
+                    this.add.passportName = this.pending.passanger[e].passportName
+                    this.add.BirthDate = this.pending.passanger[e].BirthDate
+                    this.add.Gender = this.pending.passanger[e].Gender
+                    this.add.Nationality = this.pending.passanger[e].Nationality
+                    this.add.Issuedate = this.pending.passanger[e].Issuedate
+                    this.add.ExpireDate = this.pending.passanger[e].ExpireDate
+
+                }
+                this.$nextTick(() => {
+                    this.$refs.imts[e].focus();
+            });
+            },
+                CloseFormEdit(){
+                for(var i = 0; i < this.pending.passanger.length; i++ ){
+                    this.pending.passanger[i].ShowInput = false
+                    this.pending.passanger[i].ShowText = true
+                }
+            },
+
+
+                ChangeTrip(e, a){
+                    var dataTrips;
+                    if(e == 'ReturnTrip'){
+                        dataTrips = this.pending.passanger[a].ReturnTrip
+                    }
+                    else{
+                        dataTrips = this.pending.passanger[a].DepartTrip;
+                    }
+            
+                    let dateTravel = this.FormatedDateWithDays(dataTrips.TravelDate);
+                    let Schedule = this.ScheduleTrips;
+                    let todayDate = new Date();
+                    let todayTime = todayDate.getHours()+":"+todayDate.getMinutes();
+                    this.Travel.TravelDate = dateTravel;
+                    this.Travel.TripsPending = dataTrips;
+                    this.Travel.TravelTime = dataTrips.TravelTime;
+
+                    //if( todayTime > dataTrips.TravelTime){
+                    //    this.show.tableSchedule = false;
+                    //}
+                    //else{
+                    //    this.show.tableSchedule = true;
+                    //}
+
+                    this.show.tableSchedule = true;
+                    for(let i =0; i < Schedule.length; i++){
+                        if(Schedule[i].JourneyName == dataTrips.JourneyName){
+                            this.Travel.Journey = Schedule[i];
+                            $(".TripJourneyAll").val(i);
+                           
+                        }
+                        
+                    }
+                    this.GetScheduleTrips();
+                   
+                    let TravelSchedule = this.Travel.Schedule;
+                    for(let i = 0; i < TravelSchedule.length; i++){
+                        if(TravelSchedule[i].TravelTime == dataTrips.TravelTime){
+                            this.Travel.classe = i;
+                        }
+                    }
+                    $("#TravelDate").val(dateTravel);
+                   
+                    
+
+                    
+                    
+                    
+                    $("#ChangeTrip").modal({
+                        fadeDuration: 300,
+                        fadeDelay: 0.50,
+                        closeExisting: false,
+                        showClose: false
+                    });
+
+                },
+                SelectScheduleTime(e){
+                    this.Travel.TravelTime = e;
+                }
+        },
+            validations: {
+                add: {
+                    passportNo : {required},
+                    passportName : {required},
+                    BirthDate : {required},
+                    Gender : {required},
+                    Nationality : {required},
+                    Issuedate : {required},
+                    ExpireDate : {required},
+
+                }
+        },
+
+
+        });
+
+    </script>
+
+}
+
+<div id="VueApp">
+   
+  
+    <div class="content-mff">
+        <div class="row">
+            <div class="col-md-10">
+                <h2 class="text-warning text-bold">Pending Booking </h2>
+                <input type="hidden" name="IdDataBook" id="IdDataBook" value="@Model.id">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-bordered panel-primary">
+                    <div class="panel-body">
+                        <div class="col-md-5">
+                            <span class="">Journey Type : </span>
+                            <span class="text-bold"> {{ journeyTypeName}}</span>
+
+                            <br />
+                            <span class="">Depart Trip : </span>
+                            <span class="text-bold">
+                                {{pending.DepartTrips.TravelDate}},
+                                {{pending.DepartTrips.TravelTime}},
+                                {{pending.DepartTrips.JourneyName}}
+                                ({{pending.DepartTrips.SeatCategory}})
+                            </span>
+
+                            <br />
+
+                            <div id="agentReturn" v-if="show.ReturnTrips" v-show="show.ReturnTrips">
+                                <span class="">Return Trip: </span>
+                                <span class="text-bold">
+
+                                    {{pending.ReturnTrips.TravelDate}},
+                                    {{pending.ReturnTrips.TravelTime}},
+                                    {{pending.ReturnTrips.JourneyName}}
+                                    ({{pending.ReturnTrips.SeatCategory}})
+
+                                </span>
+                            </div>
+                            <span class="">Selected Ticket : </span>
+                            <span class="text-bold">
+
+                                {{pending.price.PriceName}}
+                            </span>
+
+                        </div>
+                        <div class="col-md-4">
+                            <span class="">Booking Name : </span>
+                            <span class="text-bold">
+                                {{pending.agent.bookingName}}
+
+                            </span>
+
+                            <br />
+                            <span class="">Remark : </span>
+                            <span class="text-bold">
+
+                                {{pending.price.remark}}
+
+                            </span>
+
+                            <hr />
+                            <span class="">Payment: </span>
+                            <span class="text-bold">
+                                {{payments}}
+                            </span>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-sm btn-labeled btn-primary">
+                                <b><i class="icon-pencil3"></i></b>
+                                Edit
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-bordered panel-primary">
+                    <div class="panel-body">
+                        <span class="text-bold text-size-large">Import File Passanger</span>
+                        <hr />
+
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <button type="button" class="btn btn-success">Download Template</button>
+                            </div>
+
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <input type="file" placeholder="Choose File ext.exel" />
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <button type="button" class="btn btn-primary">Upload</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <table class="table-mff-passanger table-togglable table-hover-mff text-center panel tableFixHead">
+                    <thead class="text-center thSearch">
+                        <tr class="table-primary text-bold">
+                            <th data-toggle="true" width="150">Passport No</th>
+                            <th data-toggle="true" width="150">Passport Name</th>
+                            <th data-toggle="true" width="100">Birth Date</th>
+                            <th data-toggle="true" width="80">Gender</th>
+                            <th data-hide="phone,tablet" width="130">Nationality</th>
+                            <th data-hide="phone,tablet" width="100">Issue Date</th>
+                            <th data-hide="phone,tablet" width="100">Expiry Date</th>
+                            <th data-hide="phone,tablet" width="150">Journey Type</th>
+                            <th data-hide="phone,tablet" width="150">Depart Trip</th>
+                            <th data-hide="phone,tablet" width="150"
+                                v-show="show.ReturnTrips"
+                                v-if="show.ReturnTrips">Return Trip</th>
+                            <th data-hide="phone,tablet" width="150">Return Open Ticket</th>
+                            <th data-hide="phone,tablet" width="150">Insurance</th>
+                            <th data-toggle="phone,tablet" width="150" class="text-size-large">
+                                <i class="icon-plus-circle2 text-success" v-on:click="showForm()" style="cursor:pointer"></i>
+                            </th>
+                        </tr>
+
+                    </thead>
+                    <tbody class="passangerTables">
+                        <tr v-for="(pp, index) in pending.passanger" v-bind:class="{ 'selected' : pp.ShowInput }">
+                            <td>
+                                <span v-show="pp.ShowText">{{pp.passportNo}}</span>
+                                <input type="text" class="ipt-mff-table typeahead"
+                                       v-model="$v.add.passportNo.$model"
+                                       ref="imts"
+                                       v-bind:class="status($v.add.passportNo)"
+                                       v-show="pp.ShowInput">
+                            </td>
+                            <td>
+                                <span v-show="pp.ShowText">{{pp.passportName}}</span>
+                                <input type="text" name="passportName" class="ipt-mff-table"
+                                       v-model="$v.add.passportName.$model"
+                                       v-show="pp.ShowInput"
+                                       v-bind:class="status($v.add.passportName)" />
+                            </td>
+                            <td>
+                                <span v-show="pp.ShowText">{{pp.BirthDate}}</span>
+                                <input type="text" name="BirthDate" class="ipt-mff-table IEB"
+                                       v-model="$v.add.BirthDate.$model"
+                                       v-bind:class="status($v.add.BirthDate)"
+                                       v-show="pp.ShowInput"
+                                       v-tooltip="{
+                                          content: error.dpickerBirthDate.msg,
+                                          show: pp.error.BirthDate,
+                                          trigger: 'manual',
+                                          placement: 'bottom',
+                                        }" />
+
+                            </td>
+                            <td>
+                                <span v-show="pp.ShowText">{{pp.Gender}}</span>
+                                <select name="Gender" class="ipt-mff-table"
+                                        v-model="$v.add.Gender.$model"
+                                        v-show="pp.ShowInput"
+                                        v-bind:class="status($v.add.Gender)">
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </td>
+                            <td>
+                                <span v-show="pp.ShowText">{{pp.Nationality}}</span>
+                                <select name="Nationality" class="ipt-mff-table"
+                                        v-show="pp.ShowInput"
+                                        v-model="$v.add.Nationality.$model"
+                                        v-bind:class="status($v.add.Nationality)"
+                                        id="Nationality">
+                                    <option value="picks">-- Nationality --</option>
+                                    <option v-for="(c, index) in CountryList" v-bind:value="c.Nationality">
+                                        {{c.CountryName}}
+                                    </option>
+                                </select>
+                            </td>
+                            <td>
+                                <span v-show="pp.ShowText">{{pp.Issuedate}}</span>
+                                <input type="text" name="Issuedate" class="ipt-mff-table issuePassport"
+                                       v-model="$v.add.Issuedate.$model"
+                                       v-bind:class="status($v.add.Issuedate)"
+                                       v-show="pp.ShowInput"
+                                       v-tooltip="{
+                                          content: error.dpickerBirthDate.msg,
+                                          show: pp.error.Issuedate,
+                                          trigger: 'manual',
+                                          placement: 'bottom',
+                                        }" />
+                            </td>
+                            <td>
+                                <span v-show="pp.ShowText">{{pp.ExpireDate}}</span>
+                                <input type="text" name="ExpireDate" class="ipt-mff-table expiredPassport"
+                                       v-model="$v.add.ExpireDate.$model"
+                                       v-bind:class="status($v.add.ExpireDate)"
+                                       v-show="pp.ShowInput"
+                                       v-tooltip="{
+                                          content: error.dpickerBirthDate.msg,
+                                          show: pp.error.ExpireDate,
+                                          trigger: 'manual',
+                                          placement: 'bottom',
+                                        }" />
+                            </td>
+                            <td>{{journeyTypeName}}</td>
+                            <td class="text-bold" v-bind:class="{'DRColor' : pp.ShowInput }" v-on:click="ChangeTrip('DepartTrip', index)">
+                                {{pp.DepartTrip.TravelDate}},
+                                {{pp.DepartTrip.TravelTime}},
+                                {{pp.DepartTrip.JourneyName}}
+                                ({{pp.DepartTrip.SeatCategory}})
+                            </td>
+                            <td class="text-bold" v-bind:class="{'DRColor' : pp.ShowInput }" v-if="show.ReturnTrips" v-show="show.ReturnTrips" v-on:click="ChangeTrip('ReturnTrip', index)">
+                                {{pp.ReturnTrip.TravelDate}},
+                                {{pp.ReturnTrip.TravelTime}},
+                                {{pp.ReturnTrip.JourneyName}}
+                                ({{pp.ReturnTrip.SeatCategory}})
+                            </td>
+                            <td>No</td>
+                            <td>Y</td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-success" v-show="pp.ShowInput" v-on:click="editPaxs(index)">
+                                    <i class="icon-stack-up"></i>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-danger" v-show="pp.ShowInput" v-on:click="CloseFormEdit(index)">
+                                    <i class="icon-minus2"></i>
+                                </button>
+
+                                <button type="button" class="btn btn-sm btn-warning" v-show="pp.ShowText" v-on:click="showFormEdit(index)">
+                                    <i class="icon-pencil3"></i>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-danger" v-show="pp.ShowText" v-on:click="deletePaxs(index)">
+                                    <i class="icon-trash"></i>
+                                </button>
+
+                            </td>
+                        </tr>
+
+                        <tr class="forminputPas" v-show="show.FormAdd">
+                            <td width="150">
+                                <input type="text" name="passportNo" class="ipt-mff-table typeahead" ref="PassportNo"
+                                       v-model="$v.add.passportNo.$model"
+                                       v-bind:class="status($v.add.passportNo)" />
+                            </td>
+                            <td width="150">
+                                <input type="text" name="passportName" class="ipt-mff-table"
+                                       v-model="$v.add.passportName.$model"
+                                       v-bind:class="status($v.add.passportName)" />
+                            </td>
+                            <td data-hide="phone" width="80">
+                                <input type="text" name="BirthDate" class="ipt-mff-table IEB"
+                                       ref="BirthDate"
+                                       v-model="$v.add.BirthDate.$model"
+                                       v-bind:class="status($v.add.BirthDate)"
+                                       v-tooltip="{
+                                          content: error.dpickerBirthDate.msg,
+                                          show: error.dpickerBirthDate.notif,
+                                          trigger: 'manual',
+                                          placement: 'bottom',
+                                        }" />
+                            </td>
+                            <td width="80">
+                                <select name="Gender" class="ipt-mff-table"
+                                        v-model="$v.add.Gender.$model"
+                                        v-bind:class="status($v.add.Gender)">
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </td>
+                            <td width="130">
+                                <select name="Nationality" class="ipt-mff-table"
+                                        v-model="$v.add.Nationality.$model"
+                                        v-bind:class="status($v.add.Nationality)"
+                                        id="Nationality">
+                                    <option value="picks">-- Nationality --</option>
+                                    <option v-for="(c, index) in CountryList" v-bind:value="c.Nationality">
+                                        {{c.CountryName}}
+                                    </option>
+                                </select>
+                            </td>
+                            <td width="80">
+                                <input type="text" name="Issuedate" class="ipt-mff-table issuePassport"
+                                       v-model="$v.add.Issuedate.$model"
+                                       v-bind:class="status($v.add.Issuedate)"
+                                       v-tooltip="{
+                                          content: error.dpickerIssueDate.msg,
+                                          show: error.dpickerIssueDate.notif,
+                                          trigger: 'manual',
+                                          placement: 'bottom',
+                                        }" />
+                            </td>
+                            <td width="80">
+                                <input type="text" name="ExpireDate" class="ipt-mff-table expiredPassport"
+                                       v-model="$v.add.ExpireDate.$model"
+                                       v-bind:class="status($v.add.ExpireDate)"
+                                       v-tooltip="{
+                                          content: error.dpickerExpiredDate.msg,
+                                          show: error.dpickerExpiredDate.notif,
+                                          trigger: 'manual',
+                                          placement: 'bottom',
+                                        }" />
+                            </td>
+                            <td class="text-bold">
+                                {{journeyTypeName}}
+
+                            </td>
+                            <td class="text-bold">
+                                {{pending.DepartTrips.TravelDate}},
+                                {{pending.DepartTrips.TravelTime}},
+                                {{pending.DepartTrips.JourneyName}}
+                                ({{pending.DepartTrips.SeatCategory}})
+                            </td>
+                            <td class="text-bold" v-if="show.ReturnTrips" v-show="show.ReturnTrips">
+                                {{pending.ReturnTrips.TravelDate}},
+                                {{pending.ReturnTrips.TravelTime}},
+                                {{pending.ReturnTrips.JourneyName}}
+                                ({{pending.ReturnTrips.SeatCategory}})
+                            </td>
+                            <td>No</td>
+                            <td>Y</td>
+                            <th data-toggle="true" width="100">
+                                <button type="button" class="btn btn-sm btn-primary" v-on:click="addPax()">
+                                    <i class="icon-plus2"></i>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-success" id="editSimpan" data-value="a" style="display:none">
+                                    <i class="icon-pencil3"></i>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-danger" v-on:click="showForm()">
+                                    <i class="icon-minus2"></i>
+                                </button>
+                            </th>
+                        </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div id="ChangeTrip" class="modal modalWidth">
+        <div class="DepartTrip">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label class="text-bold">Travel Date</label>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="icon-calendar22"></i></span>
+                            <input type="text" name="travelDate" class="form-control pickadate-selectors"
+                                   value="@DateTime.Now.ToString("dddd, dd MMMM yyyy")"
+                                   id="TravelDate" />
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label class="text-bold" data-popup="tooltip" title="Left tooltip" data-placement="left">Trip</label>
+                        <select name="Trip" class="form-control TripJourneyAll" id="DepartJourney" v-on:change="GetScheduleDepart()">
+                            <option value="picks">--== Select Trips ==--</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label>&nbsp;</label>
+                        <input type="button" class="form-control btn btn-primary" value="Go" v-show="show.btnDepart" v-on:click="GoDepart()">
+                    </div>
+                </div>
+            </div>
+            <div class="loader" v-show="show.loaderAxios">Loading...</div>
+            <table class="table table-striped table-bordered DepartTableTime table-hover-mff" v-show="show.tableSchedule">
+                <thead>
+                    <tr class="table-primary">
+                        <td class="text-center" width="80">Time</td>
+                        <td class="text-center" width="120">Class</td>
+                        <td class="text-center" width="150">Quota Left</td>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    <tr v-for="(d, index) in Travel.Schedule"
+                        v-on:click="SelectScheduleTime(d.TravelTime)"
+                        v-bind:class="{ 'selected' : d.TravelTime === Travel.TravelTime}" v-bind:key="index">
+                        <td>{{d.TravelTime}}</td>
+                        <td>{{d.SeatCategory}}</td>
+                        <td>0</td>
+
+                    </tr>
+                </tbody>
+
+            </table>
+            <hr/>
+            <a href="#" rel="modal:close" class="btn btn-danger btn-sm">Close</a>
+        </div>
+    </div>
+
+
+</div>
+
+
+
+
+<!-- Link to open the modal -->
+<p><a href="#ex1" rel="modal:open">Open Modal</a></p>

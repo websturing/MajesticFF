@@ -1,0 +1,217 @@
+[
+  {
+    "agent": {
+      "agent": "a",
+      "bookingName": "a",
+      "Remark": "a",
+      "JourneyType": "1",
+      "isIncludeTicketPrice": "true",
+      "isIncludeDepartTax": "true",
+      "isIncludeReturnTax": "true",
+      "IsReturnOpenTicket": 0
+    },
+    "DepartTrips": {
+      "TripCode": "HS201908291840",
+      "JourneyCode": "HBF to SKP",
+      "JourneyName": "Harbour Front to Sekupang",
+      "TravelDate": "2019-08-29",
+      "TravelTime": "18:40",
+      "SeatCategory": "Economy"
+    },
+    "ReturnTrips": {},
+    "Journey": "1",
+    "passanger": [
+      {
+        "passportNo": "w",
+        "passportName": "asdas",
+        "BirthDate": "adas",
+        "Gender": "Male",
+        "Nationality": "0",
+        "Issuedate": "ada",
+        "ExpireDate": "ada",
+        "DepartTrip": "2019-08-29, 18:40, Harbour Front to Sekupang(Economy)",
+        "ReturnTrip": ""
+      },
+      {
+        "passportNo": " a",
+        "passportName": " ",
+        "BirthDate": " ",
+        "Gender": "Male",
+        "Nationality": "0",
+        "Issuedate": " ",
+        "ExpireDate": " ",
+        "DepartTrip": "2019-08-29, 18:40, Harbour Front to Sekupang(Economy)",
+        "ReturnTrip": ""
+      },
+      {
+        "passportNo": "c",
+        "passportName": " ",
+        "BirthDate": " ",
+        "Gender": "Male",
+        "Nationality": "0",
+        "Issuedate": " ",
+        "ExpireDate": " ",
+        "DepartTrip": "2019-08-29, 18:40, Harbour Front to Sekupang(Economy)",
+        "ReturnTrip": ""
+      },
+      {
+        "passportNo": "d",
+        "passportName": " ",
+        "BirthDate": " ",
+        "Gender": "Male",
+        "Nationality": "0",
+        "Issuedate": " ",
+        "ExpireDate": " ",
+        "DepartTrip": "2019-08-29, 18:40, Harbour Front to Sekupang(Economy)",
+        "ReturnTrip": ""
+      },
+      {
+        "passportNo": "f",
+        "passportName": " ",
+        "BirthDate": " ",
+        "Gender": "Male",
+        "Nationality": "0",
+        "Issuedate": " ",
+        "ExpireDate": " ",
+        "DepartTrip": "2019-08-29, 18:40, Harbour Front to Sekupang(Economy)",
+        "ReturnTrip": ""
+      },
+      {
+        "passportNo": "e",
+        "passportName": " ",
+        "BirthDate": " ",
+        "Gender": "Male",
+        "Nationality": "0",
+        "Issuedate": " ",
+        "ExpireDate": " ",
+        "DepartTrip": "2019-08-29, 18:40, Harbour Front to Sekupang(Economy)",
+        "ReturnTrip": ""
+      },
+      {
+        "passportNo": "t",
+        "passportName": " ",
+        "BirthDate": " ",
+        "Gender": "Male",
+        "Nationality": "0",
+        "Issuedate": " ",
+        "ExpireDate": " ",
+        "DepartTrip": "2019-08-29, 18:40, Harbour Front to Sekupang(Economy)",
+        "ReturnTrip": ""
+      },
+      {
+        "passportNo": "w",
+        "passportName": " asdas",
+        "BirthDate": "12321",
+        "Gender": "Male",
+        "Nationality": "Singaporean",
+        "Issuedate": " 2342`23",
+        "ExpireDate": " 2342",
+        "DepartTrip": "2019-08-29, 18:40, Harbour Front to Sekupang(Economy)",
+        "ReturnTrip": ""
+      },
+      {
+        "passportNo": "w",
+        "passportName": " ",
+        "BirthDate": " ",
+        "Gender": "Male",
+        "Nationality": "0",
+        "Issuedate": " ",
+        "ExpireDate": " ",
+        "DepartTrip": "2019-08-29, 18:40, Harbour Front to Sekupang(Economy)",
+        "ReturnTrip": ""
+      }
+    ],
+    "price": {
+      "PriceTitle": "1-WAY BTM",
+      "PriceName": "BTM Ticket - One-Way Adult Economy ALL Passport",
+      "Price": "SGD 25.00",
+      "PriceCode": "FrontDesk0002SG111010ALLBASE",
+      "SeatCategory": "Economy",
+      "ApplicablePassport": "ALL"
+    },
+    "created": {
+      "date": "08/29/2019 15:42:2",
+      "status": "pendingbooking"
+    }
+  },
+  {
+    "agent": {
+      "agent": "b",
+      "bookingName": "b",
+      "Remark": "b",
+      "JourneyType": "1",
+      "isIncludeTicketPrice": "true",
+      "isIncludeDepartTax": "true",
+      "isIncludeReturnTax": "true",
+      "IsReturnOpenTicket": 0
+    },
+    "DepartTrips": {
+      "TripCode": "HS201908292040",
+      "JourneyCode": "HBF to SKP",
+      "JourneyName": "Harbour Front to Sekupang",
+      "TravelDate": "2019-08-29",
+      "TravelTime": "20:40",
+      "SeatCategory": "Economy"
+    },
+    "ReturnTrips": {},
+    "Journey": "1",
+    "passanger": [
+      {
+        "passportNo": " isnawati",
+        "passportName": "afriandi",
+        "BirthDate": "1231231",
+        "Gender": "Female",
+        "Nationality": "Singaporean",
+        "Issuedate": "asdasa",
+        "ExpireDate": "adasda",
+        "DepartTrip": "2019-08-29, 20:40, Harbour Front to Sekupang(Economy)",
+        "ReturnTrip": ""
+      },
+      {
+        "passportNo": "B890123",
+        "passportName": "AFRIANDI",
+        "BirthDate": "07/20/1995",
+        "Gender": "Male",
+        "Nationality": "Indonesian",
+        "Issuedate": "08/12/2017",
+        "ExpireDate": "08/12/2020",
+        "DepartTrip": "2019-08-29, 20:40, Harbour Front to Sekupang(Economy)",
+        "ReturnTrip": ""
+      },
+      {
+        "passportNo": "D12381723",
+        "passportName": "SAIFUL NAJIB",
+        "BirthDate": "07/20/1999",
+        "Gender": "Male",
+        "Nationality": "Singaporean",
+        "Issuedate": "08/22/2018",
+        "ExpireDate": "08/12/2023",
+        "DepartTrip": "2019-08-29, 20:40, Harbour Front to Sekupang(Economy)",
+        "ReturnTrip": ""
+      },
+      {
+        "passportNo": "D1246783",
+        "passportName": "SUPRIANTO MAULANA",
+        "BirthDate": "07/20/1999",
+        "Gender": "Male",
+        "Nationality": "Singaporean",
+        "Issuedate": "08/22/2018",
+        "ExpireDate": "08/12/2023",
+        "DepartTrip": "2019-08-29, 20:40, Harbour Front to Sekupang(Economy)",
+        "ReturnTrip": ""
+      }
+    ],
+    "price": {
+      "PriceTitle": "1-WAY BTM",
+      "PriceName": "BTM Ticket - One-Way Adult Economy ALL Passport",
+      "Price": "SGD 25.00",
+      "PriceCode": "FrontDesk0002SG111010ALLBASE",
+      "SeatCategory": "Economy",
+      "ApplicablePassport": "ALL"
+    },
+    "created": {
+      "date": "08/29/2019 15:42:32",
+      "status": "pendingbooking"
+    }
+  }
+]

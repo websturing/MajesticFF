@@ -1,0 +1,65 @@
+﻿@{
+    ViewBag.Title = "Allbooking";
+}
+
+
+<div class="content-mff">
+
+
+    <div class="row">
+        <div class="col-lg-10">
+            <h1 class="text-bold text-warning no-margin-top no-padding-top">Pending Booking</h1>
+            
+        </div>
+        <div class="col-lg-2 text-right-md" style="margin-bottom:10px;">
+            <button type="button" class="btn btn-primary btn-labeled btn-xs no-margin">
+                <b><i class="icon-user"></i></b>
+                @Html.ActionLink("Add New Booking", "bookingForm", "Bookings")
+            </button>
+        </div>
+        <div style="clear:both"></div>
+        <div class="col-md-12">
+            <table class="table table-striped table-bordered table-hover-mff table-xs">
+                <thead>
+                    <tr class="table-primary">
+                        <th class="text-center">Date Created</th>
+                        <th class="text-center">Created By</th>
+                        <th class="text-center">Booking Name</th>
+                        <th class="text-center">Journey Type</th>
+                        <th class="text-center">Trip</th>
+                        <th class="text-center">Passenger</th>
+                    </tr>
+                </thead>
+                <tbody class="passangerPending"></tbody>
+
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+
+            <h3 class="text-bold text-success">Booking History</h3>
+
+
+            <table class="table table-striped table-bordered table-hover-mff table-xs">
+                <thead>
+                    <tr class="table-primary">
+                        <th class="text-center">Booking Date</th>
+                        <th class="text-center">Created By</th>
+                        <th class="text-center">Booking Code</th>
+                        <th class="text-center">Booking Name</th>
+                        <th class="text-center">One Way</th>
+                        <th class="text-center">Round Trip</th>
+                        <th class="text-center">Ticket Price</th>
+                        <th class="text-center">Passanger</th>
+                        <th class="text-center">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="PassangerBook"></tbody>
+
+            </table>
+        </div>
+
+    </div>
+</div>
+

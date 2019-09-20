@@ -1,0 +1,567 @@
+[
+  {
+    "agent": {
+      "agent": "agent b",
+      "bookingName": "test1",
+      "bookingCode": "CONFIRMBOOKINGcODE",
+      "Remark": "asd",
+      "JourneyType": "2",
+      "isIncludeTicketPrice": "true",
+      "isIncludeDepartTax": "true",
+      "isIncludeReturnTax": "true",
+      "IsReturnOpenTicket": 0
+    },
+    "DepartTrips": {
+      "TripCode": "HS201908301400",
+      "JourneyCode": "HBF to SKP",
+      "JourneyName": "Harbour Front to Sekupang",
+      "TravelDate": "2019-08-30",
+      "TravelTime": "14:00",
+      "SeatCategory": "Economy"
+    },
+    "ReturnTrips": {
+      "TripCode": "SH201908301800",
+      "JourneyCode": "SKP to HBF",
+      "JourneyName": "Sekupang to Harbour Front",
+      "TravelDate": "2019-08-30",
+      "TravelTime": "18:00",
+      "SeatCategory": "Economy"
+    },
+    "Journey": "2",
+    "passanger": [
+      {
+        "passportNo": "A1234120",
+        "passportName": "ISNAWATI",
+        "BirthDate": "07/20/1999",
+        "Gender": "Female",
+        "Nationality": "Malaysian",
+        "Issuedate": "08/12/2018",
+        "ExpireDate": "08/12/2021",
+        "DepartTrip": "2019-08-30, 14:00, Harbour Front to Sekupang(Economy)",
+        "ReturnTrip": "2019-08-30, 18:00, Sekupang to Harbour Front(Economy)"
+      },
+      {
+        "passportNo": "B890123",
+        "passportName": "AFRIANDI",
+        "BirthDate": "07/20/1995",
+        "Gender": "Male",
+        "Nationality": "Indonesian",
+        "Issuedate": "08/12/2017",
+        "ExpireDate": "08/12/2020",
+        "DepartTrip": "2019-08-30, 14:00, Harbour Front to Sekupang(Economy)",
+        "ReturnTrip": "2019-08-30, 18:00, Sekupang to Harbour Front(Economy)"
+      }
+    ],
+    "price": {
+      "PriceTitle": "2-WAY BTM",
+      "PriceName": "BTM Ticket - Two-Way Adult Economy ALL Passport",
+      "Price": "SGD 49.00",
+      "PriceCode": "FrontDesk0002SG211012ALLBASE",
+      "SeatCategory": "Economy",
+      "ApplicablePassport": "ALL"
+    },
+    "created": {
+      "date": "08/30/2019 9:37:0",
+      "status": "confirm"
+    }
+  },
+  {
+    "agent": {
+      "agent": "test agent 2",
+      "bookingName": "test agent 3",
+      "bookingCode": "CONFIRMBOOKINGcODE",
+      "Remark": "asdasda",
+      "JourneyType": "2",
+      "isIncludeTicketPrice": "true",
+      "isIncludeDepartTax": "true",
+      "isIncludeReturnTax": "true",
+      "IsReturnOpenTicket": 0
+    },
+    "DepartTrips": {
+      "TripCode": "HB201908301450",
+      "JourneyCode": "HBF to BTC",
+      "JourneyName": "Harbour Front to Batam Centre",
+      "TravelDate": "2019-08-30",
+      "TravelTime": "14:50",
+      "SeatCategory": "Economy"
+    },
+    "ReturnTrips": {
+      "TripCode": "BH201908301925",
+      "JourneyCode": "BTC to HBF",
+      "JourneyName": "Batam Centre to Harbour Front",
+      "TravelDate": "2019-08-30",
+      "TravelTime": "19:25",
+      "SeatCategory": "Economy"
+    },
+    "Journey": "2",
+    "passanger": [
+      {
+        "passportNo": "B890123",
+        "passportName": "AFRIANDI",
+        "BirthDate": "07/20/1995",
+        "Gender": "Male",
+        "Nationality": "Indonesian",
+        "Issuedate": "08/12/2017",
+        "ExpireDate": "08/12/2020",
+        "DepartTrip": "2019-08-30, 14:50, Harbour Front to Batam Centre(Economy)",
+        "ReturnTrip": "2019-08-30 , 19:25,  Batam Centre to Harbour Front , (Economy)"
+      }
+    ],
+    "price": {
+      "PriceTitle": "SENIOR PROMO",
+      "PriceName": "BTM Ticket - Two-Way S.Citizen Economy SG Passport - Restrict Depart",
+      "Price": "SGD 32.00",
+      "PriceCode": "FrontDesk0002SG231112SGBASE",
+      "SeatCategory": "Economy",
+      "ApplicablePassport": "SG"
+    },
+    "created": {
+      "date": "08/30/2019 10:51:26",
+      "status": "confirm"
+    }
+  },
+  {
+    "agent": {
+      "agent": "test",
+      "bookingName": "test5",
+      "bookingCode": "CONFIRMBOOKINGcODE",
+      "Remark": "asda",
+      "JourneyType": "1",
+      "isIncludeTicketPrice": "true",
+      "isIncludeDepartTax": "true",
+      "isIncludeReturnTax": "true",
+      "IsReturnOpenTicket": 0
+    },
+    "DepartTrips": {
+      "TripCode": "HS201908301740",
+      "JourneyCode": "HBF to SKP",
+      "JourneyName": "Harbour Front to Sekupang",
+      "TravelDate": "2019-08-30",
+      "TravelTime": "17:40",
+      "SeatCategory": "Economy"
+    },
+    "ReturnTrips": {},
+    "Journey": "1",
+    "passanger": [
+      {
+        "passportNo": "B890123",
+        "passportName": "AFRIANDI",
+        "BirthDate": "07/20/1995",
+        "Gender": "Male",
+        "Nationality": "Indonesian",
+        "Issuedate": "08/12/2017",
+        "ExpireDate": "08/12/2020",
+        "DepartTrip": "2019-08-30, 17:40, Harbour Front to Sekupang(Economy)",
+        "ReturnTrip": ""
+      },
+      {
+        "passportNo": "C4562",
+        "passportName": "ISNAWATI EDIT",
+        "BirthDate": "07/20/1999",
+        "Gender": "Female",
+        "Nationality": "Malaysian",
+        "Issuedate": "08/12/2018",
+        "ExpireDate": "08/12/2021",
+        "DepartTrip": "2019-08-30, 17:40, Harbour Front to Sekupang(Economy)",
+        "ReturnTrip": ""
+      }
+    ],
+    "price": {
+      "PriceTitle": "1-WAY BTM",
+      "PriceName": "BTM Ticket - One-Way Adult Economy ALL Passport",
+      "Price": "SGD 25.00",
+      "PriceCode": "FrontDesk0002SG111010ALLBASE",
+      "SeatCategory": "Economy",
+      "ApplicablePassport": "ALL"
+    },
+    "created": {
+      "date": "08/30/2019 11:12:56",
+      "status": "confirm"
+    }
+  },
+  {
+    "agent": {
+      "agent": "KJHJK",
+      "bookingName": "GDFGF",
+      "bookingCode": "CONFIRMBOOKINGcODE",
+      "Remark": "TGFDFG",
+      "JourneyType": "2",
+      "isIncludeTicketPrice": "true",
+      "isIncludeDepartTax": "true",
+      "isIncludeReturnTax": "true",
+      "IsReturnOpenTicket": 0
+    },
+    "DepartTrips": {
+      "TripCode": "HS201908311245",
+      "JourneyCode": "HBF to SKP",
+      "JourneyName": "Harbour Front to Sekupang",
+      "TravelDate": "2019-08-31",
+      "TravelTime": "12:45",
+      "SeatCategory": "Economy"
+    },
+    "ReturnTrips": {
+      "TripCode": "SH201908311620",
+      "JourneyCode": "SKP to HBF",
+      "JourneyName": "Sekupang to Harbour Front",
+      "TravelDate": "2019-08-31",
+      "TravelTime": "16:20",
+      "SeatCategory": "Economy"
+    },
+    "Journey": "2",
+    "passanger": [
+      {
+        "passportNo": "B890123",
+        "passportName": "AFRIANDI",
+        "BirthDate": "07/20/1995",
+        "Gender": "Male",
+        "Nationality": "Indonesian",
+        "Issuedate": "08/12/2017",
+        "ExpireDate": "08/12/2020",
+        "DepartTrip": "2019-08-31, 12:45, Harbour Front to Sekupang(Economy)",
+        "ReturnTrip": "2019-08-31 , 16:20,  Sekupang to Harbour Front , (Economy)"
+      },
+      {
+        "passportNo": "C4524",
+        "passportName": "ISNAWATI EDIT",
+        "BirthDate": "07/20/1999",
+        "Gender": "Female",
+        "Nationality": "Malaysian",
+        "Issuedate": "08/12/2018",
+        "ExpireDate": "08/12/2021",
+        "DepartTrip": "2019-08-31, 12:45, Harbour Front to Sekupang(Economy)",
+        "ReturnTrip": "2019-08-31 , 16:20,  Sekupang to Harbour Front , (Economy)"
+      },
+      {
+        "passportNo": "C4524",
+        "passportName": "SDFSD",
+        "BirthDate": "08/04/1995",
+        "Gender": "Male",
+        "Nationality": "EALVADOREAN",
+        "Issuedate": "07/08/2017",
+        "ExpireDate": "09/06/2023",
+        "DepartTrip": "2019-08-31, 12:45, Harbour Front to Sekupang(Economy)",
+        "ReturnTrip": "2019-08-31 , 16:20,  Sekupang to Harbour Front , (Economy)"
+      }
+    ],
+    "price": {
+      "PriceTitle": "2-WAY BTM",
+      "PriceName": "BTM Ticket - Two-Way Adult Economy ALL Passport",
+      "Price": "SGD 49.00",
+      "PriceCode": "FrontDesk0002SG211012ALLBASE",
+      "SeatCategory": "Economy",
+      "ApplicablePassport": "ALL"
+    },
+    "created": {
+      "date": "08/30/2019 11:17:48",
+      "status": "confirm"
+    }
+  },
+  {
+    "agent": {
+      "agent": " AF RG",
+      "bookingName": "DFSF",
+      "bookingCode": "CONFIRMBOOKINGcODE",
+      "Remark": "GFDG",
+      "JourneyType": "2",
+      "isIncludeTicketPrice": "true",
+      "isIncludeDepartTax": "true",
+      "isIncludeReturnTax": "true",
+      "IsReturnOpenTicket": 0
+    },
+    "DepartTrips": {
+      "TripCode": "HS201908301400",
+      "JourneyCode": "HBF to SKP",
+      "JourneyName": "Harbour Front to Sekupang",
+      "TravelDate": "2019-08-30",
+      "TravelTime": "14:00",
+      "SeatCategory": "Economy"
+    },
+    "ReturnTrips": {
+      "TripCode": "SH201908301900",
+      "JourneyCode": "SKP to HBF",
+      "JourneyName": "Sekupang to Harbour Front",
+      "TravelDate": "2019-08-30",
+      "TravelTime": "19:00",
+      "SeatCategory": "Economy"
+    },
+    "Journey": "2",
+    "passanger": [
+      {
+        "passportNo": "B890123",
+        "passportName": "AFRIANDI",
+        "BirthDate": "07/20/1995",
+        "Gender": "Male",
+        "Nationality": "Indonesian",
+        "Issuedate": "08/12/2017",
+        "ExpireDate": "08/12/2020",
+        "DepartTrip": "2019-08-30, 14:00, Harbour Front to Sekupang(Economy)",
+        "ReturnTrip": "2019-08-30 , 19:00,  Sekupang to Harbour Front , (Economy)"
+      },
+      {
+        "passportNo": "A1234120",
+        "passportName": "ISNAWATI",
+        "BirthDate": "07/20/1999",
+        "Gender": "Female",
+        "Nationality": "Malaysian",
+        "Issuedate": "08/12/2018",
+        "ExpireDate": "08/12/2021",
+        "DepartTrip": "2019-08-30, 14:00, Harbour Front to Sekupang(Economy)",
+        "ReturnTrip": "2019-08-30 , 19:00,  Sekupang to Harbour Front , (Economy)"
+      },
+      {
+        "passportNo": " A476576",
+        "passportName": "SUPRIANTO MAULANA EDIT",
+        "BirthDate": "07/20/1999",
+        "Gender": "Male",
+        "Nationality": "Singaporean",
+        "Issuedate": "08/22/2018",
+        "ExpireDate": "08/12/2023",
+        "DepartTrip": "2019-08-30, 14:00, Harbour Front to Sekupang(Economy)",
+        "ReturnTrip": "2019-08-30 , 19:00,  Sekupang to Harbour Front , (Economy)"
+      },
+      {
+        "passportNo": " A476576",
+        "passportName": "SFDS",
+        "BirthDate": "04/20/1995",
+        "Gender": "Male",
+        "Nationality": "Indonesian",
+        "Issuedate": " 12/08/2017",
+        "ExpireDate": "12/08/2023",
+        "DepartTrip": "2019-08-30, 14:00, Harbour Front to Sekupang(Economy)",
+        "ReturnTrip": "2019-08-30 , 19:00,  Sekupang to Harbour Front , (Economy)"
+      }
+    ],
+    "price": {
+      "PriceTitle": "2-WAY BTM",
+      "PriceName": "BTM Ticket - Two-Way Adult Economy ALL Passport",
+      "Price": "SGD 49.00",
+      "PriceCode": "FrontDesk0002SG211012ALLBASE",
+      "SeatCategory": "Economy",
+      "ApplicablePassport": "ALL"
+    },
+    "created": {
+      "date": "08/30/2019 11:22:29",
+      "status": "confirm"
+    }
+  },
+  {
+    "agent": {
+      "agent": "test",
+      "bookingName": "test",
+      "bookingCode": "CONFIRMBOOKINGcODE",
+      "Remark": "tetstasd",
+      "JourneyType": "2",
+      "isIncludeTicketPrice": "true",
+      "isIncludeDepartTax": "true",
+      "isIncludeReturnTax": "true",
+      "IsReturnOpenTicket": 0
+    },
+    "DepartTrips": {
+      "TripCode": "HB201908310850",
+      "JourneyCode": "HBF to BTC",
+      "JourneyName": "Harbour Front to Batam Centre",
+      "TravelDate": "2019-08-31",
+      "TravelTime": "08:50",
+      "SeatCategory": "Economy"
+    },
+    "ReturnTrips": {
+      "TripCode": "BH201908311730",
+      "JourneyCode": "BTC to HBF",
+      "JourneyName": "Batam Centre to Harbour Front",
+      "TravelDate": "2019-08-31",
+      "TravelTime": "17:30",
+      "SeatCategory": "Economy"
+    },
+    "Journey": "2",
+    "passanger": [
+      {
+        "passportNo": "B890123",
+        "passportName": "AFRIANDI",
+        "BirthDate": "07/20/1995",
+        "Gender": "Male",
+        "Nationality": "Indonesian",
+        "Issuedate": "08/12/2017",
+        "ExpireDate": "08/12/2020",
+        "DepartTrip": "2019-08-31, 08:50, Harbour Front to Batam Centre(Economy)",
+        "ReturnTrip": "2019-08-31 , 17:30,  Batam Centre to Harbour Front , (Economy)"
+      },
+      {
+        "passportNo": "A1234120",
+        "passportName": "ISNAWATI",
+        "BirthDate": "07/20/1999",
+        "Gender": "Female",
+        "Nationality": "Malaysian",
+        "Issuedate": "08/12/2018",
+        "ExpireDate": "08/12/2021",
+        "DepartTrip": "2019-08-31, 08:50, Harbour Front to Batam Centre(Economy)",
+        "ReturnTrip": "2019-08-31 , 17:30,  Batam Centre to Harbour Front , (Economy)"
+      },
+      {
+        "passportNo": "B889asd",
+        "passportName": "afrinadi",
+        "BirthDate": " 08/07/1995",
+        "Gender": "Male",
+        "Nationality": "Indonesian",
+        "Issuedate": " 09/07/2017",
+        "ExpireDate": "08/07/2023",
+        "DepartTrip": "2019-08-31, 08:50, Harbour Front to Batam Centre(Economy)",
+        "ReturnTrip": "2019-08-31 , 17:30,  Batam Centre to Harbour Front , (Economy)"
+      },
+      {
+        "passportNo": "D12381723",
+        "passportName": "SAIFUL NAJIB",
+        "BirthDate": "07/20/1999",
+        "Gender": "Male",
+        "Nationality": "Singaporean",
+        "Issuedate": "08/22/2018",
+        "ExpireDate": "08/12/2023",
+        "DepartTrip": "2019-08-31, 08:50, Harbour Front to Batam Centre(Economy)",
+        "ReturnTrip": "2019-08-31 , 17:30,  Batam Centre to Harbour Front , (Economy)"
+      }
+    ],
+    "price": {
+      "PriceTitle": "2-WAY BTM",
+      "PriceName": "BTM Ticket - Two-Way Adult Economy ALL Passport",
+      "Price": "SGD 49.00",
+      "PriceCode": "FrontDesk0002SG211012ALLBASE",
+      "SeatCategory": "Economy",
+      "ApplicablePassport": "ALL"
+    },
+    "created": {
+      "date": "08/30/2019 11:35:45",
+      "status": "confirm"
+    }
+  },
+  {
+    "agent": {
+      "agent": "kjgh",
+      "bookingName": "gfdg",
+      "bookingCode": "CONFIRMBOOKINGcODE",
+      "Remark": "gfsdg",
+      "JourneyType": "2",
+      "isIncludeTicketPrice": "true",
+      "isIncludeDepartTax": "true",
+      "isIncludeReturnTax": "true",
+      "IsReturnOpenTicket": 0
+    },
+    "DepartTrips": {
+      "TripCode": "HB201908301450",
+      "JourneyCode": "HBF to BTC",
+      "JourneyName": "Harbour Front to Batam Centre",
+      "TravelDate": "2019-08-30",
+      "TravelTime": "14:50",
+      "SeatCategory": "Economy"
+    },
+    "ReturnTrips": {
+      "TripCode": "BH201908301925",
+      "JourneyCode": "BTC to HBF",
+      "JourneyName": "Batam Centre to Harbour Front",
+      "TravelDate": "2019-08-30",
+      "TravelTime": "19:25",
+      "SeatCategory": "Economy"
+    },
+    "Journey": "2",
+    "passanger": [
+      {
+        "passportNo": " adeytr",
+        "passportName": "tetre",
+        "BirthDate": "08/08/1995",
+        "Gender": "Male",
+        "Nationality": "Indonesian",
+        "Issuedate": "12/05/2016",
+        "ExpireDate": "12/05/2024",
+        "DepartTrip": "2019-08-30, 14:50, Harbour Front to Batam Centre(Economy)",
+        "ReturnTrip": "2019-08-30 , 19:25,  Batam Centre to Harbour Front , (Economy)"
+      },
+      {
+        "passportNo": "A1234120",
+        "passportName": "AFRIANDI edit",
+        "BirthDate": "07/20/1995",
+        "Gender": "Male",
+        "Nationality": "Indonesian",
+        "Issuedate": "08/12/2017",
+        "ExpireDate": "08/12/2020",
+        "DepartTrip": "2019-08-30, 14:50, Harbour Front to Batam Centre(Economy)",
+        "ReturnTrip": "2019-08-30 , 19:25,  Batam Centre to Harbour Front , (Economy)"
+      },
+      {
+        "passportNo": "A1234120",
+        "passportName": "ISNAWATI",
+        "BirthDate": "07/20/1999",
+        "Gender": "Female",
+        "Nationality": "Malaysian",
+        "Issuedate": "08/12/2018",
+        "ExpireDate": "08/12/2021",
+        "DepartTrip": "2019-08-30, 14:50, Harbour Front to Batam Centre(Economy)",
+        "ReturnTrip": "2019-08-30 , 19:25,  Batam Centre to Harbour Front , (Economy)"
+      }
+    ],
+    "price": {
+      "PriceTitle": "2-WAY BTM",
+      "PriceName": "BTM Ticket - Two-Way Adult Economy ALL Passport",
+      "Price": "SGD 49.00",
+      "PriceCode": "FrontDesk0002SG211012ALLBASE",
+      "SeatCategory": "Economy",
+      "ApplicablePassport": "ALL"
+    },
+    "created": {
+      "date": "08/30/2019 12:7:3",
+      "status": "confirm"
+    }
+  },
+  {
+    "agent": {
+      "agent": "test round trip",
+      "bookingName": "asda",
+      "bookingCode": "CONFIRMBOOKINGcODE",
+      "Remark": "asdasd",
+      "JourneyType": "2",
+      "isIncludeTicketPrice": "true",
+      "isIncludeDepartTax": "true",
+      "isIncludeReturnTax": "true",
+      "IsReturnOpenTicket": 0
+    },
+    "DepartTrips": {
+      "TripCode": "TB201908301515",
+      "JourneyCode": "TMF to BTC",
+      "JourneyName": "Tanah Merah to Batam Centre",
+      "TravelDate": "2019-08-30",
+      "TravelTime": "15:15",
+      "SeatCategory": "Economy"
+    },
+    "ReturnTrips": {
+      "TripCode": "BT201908301800",
+      "JourneyCode": "BTC to TMF",
+      "JourneyName": "Batam Centre to Tanah Merah",
+      "TravelDate": "2019-08-30",
+      "TravelTime": "18:00",
+      "SeatCategory": "Economy"
+    },
+    "Journey": "2",
+    "passanger": [
+      {
+        "passportNo": "B890123",
+        "passportName": "AFRIANDI",
+        "BirthDate": "07/20/1995",
+        "Gender": "Male",
+        "Nationality": null,
+        "Issuedate": "08/12/2017",
+        "ExpireDate": "08/12/2020",
+        "DepartTrip": "2019-08-30, 15:15, Tanah Merah to Batam Centre(Economy)",
+        "ReturnTrip": "2019-08-30 , 18:00,  Batam Centre to Tanah Merah , (Economy)"
+      }
+    ],
+    "price": {
+      "PriceTitle": "2-WAY BTM",
+      "PriceName": "BTM Ticket - Two-Way Adult Economy ALL Passport",
+      "Price": "SGD 49.00",
+      "PriceCode": "FrontDesk0002SG211012ALLBASE",
+      "SeatCategory": "Economy",
+      "ApplicablePassport": "ALL"
+    },
+    "created": {
+      "date": "08/30/2019 10:42:15",
+      "status": "confirm"
+    }
+  }
+]

@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link href="~/Content/assets/plugins/iziToast/iziToast.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Content/assets/plugins/jqueryModal/jquermodal.css" />
+    <script src="~/Scripts/vue.min.js"></script>
+    <script src="~/Scripts/axios.min.js"></script>
+</head>
+<body class="navbar-top">
+    <div class="navbar navbar-inverse navbar-fixed-top navbar-mff">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <img src="~/Content/images/logo.png" height="60" style="margin-left:30px" />
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li>@Html.ActionLink("DEPOSIT", "Index", "Home")</li>
+                <li>@Html.ActionLink("STAFF", "About", "Home")</li>
+                <li>@Html.ActionLink("BOOKING", "Allbooking", "Bookings")</li>
+                <li>@Html.ActionLink("QUOTAS", "Contact", "Home")</li>
+            </ul>
+            @Html.Partial("_LoginPartial")
+        </div>
+    </div>
+
+    <div class="page-container">
+        <div class="page-content">
+            <div class="content-wrapper">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+    <div class="footer text-muted">
+        <p class="text-bold text-warning">&copy; @DateTime.Now.Year - MAJESTIC FAST FERRY LTD.</p>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <script src="https://unpkg.com/popper.js"></script>
+    <script src="https://unpkg.com/v-tooltip@2.0.2"></script>
+    <script src="~/Content/assets/plugins/vuelidate/vuelidate.min.js"></script>
+    <script src="~/Content/assets/plugins/vuelidate/validators.min.js"></script>
+    <script src="~/Content/assets/plugins/iziToast/iziToast.js"></script>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

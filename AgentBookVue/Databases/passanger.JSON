@@ -1,0 +1,47 @@
+[
+    {
+        "passportNo": "B890123",
+        "passportName": "AFRIANDI",
+        "BirthDate": "07/20/1995",
+        "Gender": "Male",
+        "Nationality": "Indonesian",
+        "Issuedate": "08/12/2017",
+        "ExpireDate": "08/12/2020",
+        "DepartTrip": "2019-08-29, 18:40, Harbour Front to Sekupang(Economy)",
+        "ReturnTrip": ""
+      },
+      {
+        "passportNo": "A1234120",
+        "passportName": "ISNAWATI",
+        "BirthDate": "07/20/1999",
+        "Gender": "Female",
+        "Nationality": "Malaysian",
+        "Issuedate": "08/12/2018",
+        "ExpireDate": "08/12/2021",
+        "DepartTrip": "2019-08-29, 18:40, Harbour Front to Sekupang(Economy)",
+        "ReturnTrip": ""
+      },
+      {
+        "passportNo": "D12381723",
+        "passportName": "SAIFUL NAJIB",
+        "BirthDate": "07/20/1999",
+        "Gender": "Male",
+        "Nationality": "Singaporean",
+        "Issuedate": "08/22/2018",
+        "ExpireDate": "08/12/2023",
+        "DepartTrip": "2019-08-29, 18:40, Harbour Front to Sekupang(Economy)",
+        "ReturnTrip": ""
+      },
+    {
+        "passportNo": "D1246783",
+        "passportName": "SUPRIANTO MAULANA",
+        "BirthDate": "07/20/1999",
+        "Gender": "Male",
+        "Nationality": "Singaporean",
+        "Issuedate": "08/22/2018",
+        "ExpireDate": "08/12/2023",
+        "DepartTrip": "2019-08-29, 18:40, Harbour Front to Sekupang(Economy)",
+        "ReturnTrip": ""
+      },
+    
+]

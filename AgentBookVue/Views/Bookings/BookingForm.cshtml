@@ -1,0 +1,613 @@
+﻿@{
+    ViewBag.Title = "BookingForm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+
+
+        });
+    </script>
+    <script>
+
+        Vue.use(VueLoading);
+        var mainVue = new Vue({
+            el: "#VueApp",
+            data :{
+                form:{
+                    agent: null,
+                    bookingName:null,
+                    remark:null,
+                    journeyType:1,
+                    payments:{
+                        isIncludeTicketPrice: true,
+                        isIncludeDepartTax: true,
+                        isIncludeReturnTax: false,
+                        IsReturnOpenTicket: false
+                    },
+                    journey:{
+                        TravelDateDepart: null,
+                        TravelDateReturn: null,
+                        DepartTrips: null,
+                        ReturnTrips: {
+                            ReturnDepartPort : '',
+                            ReturnArrivalPort : '',
+
+                        },
+                    },
+                    journeySelected:{
+                        DepartTrips: null,
+                        ReturnTrips: null,
+                        Price:null,
+                    }
+                },
+                ScheduleTrips: [],
+                TripSchedules: {
+                    DepartTrips: null,
+                    ReturnTrips: null,
+                    Price:null,
+                },
+                url:{
+                    getpassanger :'/Bookings/GetPassanger',
+                    GetJourney :'/Bookings/GetJourney',
+                    GetSchedule : '/Bookings/GetSchedule',
+                    AddBooking : '/Bookings/PendingBookingSubmit',
+                },
+                show:{
+                    WrapperReturnTrips:false,
+                    ReturnTripsTax:false,
+                    btnDepart:true,
+                    tableScheduleDepart: false,
+                    tableScheduleReturn: false,
+                    loaderAxios: false,
+                },
+                classe:{
+                    DepartTimeTr : '',
+                    ReturnTimeTr : ''
+                },
+                disabled:{
+                    addPassanger : false,
+                }
+            },
+            created(){
+               this.ScheduleTrip();
+        this.form.journey.TravelDateDepart = $("#DepartTravelDate").val();
+        this.form.journey.TravelDateReturn = $("#DepartTravelDate").val();
+
+        },
+            mounted(){
+                $('#DepartTravelDate').pickadate({
+                    selectYears: true,
+                    selectMonths: true,
+                    format: 'dddd, dd mmmm yyyy',
+                    formatSubmit: 'yyyy/mm/dd',
+                    min: true,
+                    max: 40,
+                    onSet: (context) => {
+
+                        var today = this.FormatedDateWithDays(context.select);
+                this.form.journey.TravelDateDepart = today;
+
+                if(this.form.journeyType == 2){
+                    this.form.journey.TravelDateReturn =  this.form.journey.TravelDateDepart
+                }
+
+
+            },
+            });
+                $('#ReturnTravelDate').pickadate({
+                selectYears: true,
+                selectMonths: true,
+                format: 'dddd, dd mmmm yyyy',
+                formatSubmit: 'yyyy/mm/dd',
+                min: true,
+                max: 40,
+                onSet: (context) => {
+
+                    var today = this.FormatedDateWithDays(context.select);
+                    this.form.journey.TravelDateReturn = today;
+
+
+
+
+            },
+            });
+
+            },
+            methods: {
+                getTravelDate(){
+                    this.DepartTravelDate = $("#DepartTravelDate").val()
+                },
+                FormatedDateWithDays(e){
+                    var weekdays = new Array(7);
+                    weekdays[0] = "Sunday";
+                    weekdays[1] = "Monday";
+                    weekdays[2] = "Tuesday";
+                    weekdays[3] = "Wednesday";
+                    weekdays[4] = "Thursday";
+                    weekdays[5] = "Friday";
+                    weekdays[6] = "Saturday";
+
+                    var monthNames = ["January", "February", "March", "April", "May","June","July", "August", "September", "October", "November","December"];
+
+
+
+                    var today = new Date(e);
+                    var days = today.getDay();
+                    var dd = String(today.getDate()).padStart(2, '0');
+                    var mm = String(today.getMonth()); //January is 0!
+                    var yyyy = today.getFullYear();
+                    var h = today.getHours();
+                    var m = today.getMinutes();
+                    var d = today.getSeconds();
+
+                    today = weekdays[days] + ', '+ dd + ' ' + monthNames[mm] + ' ' + yyyy;
+                    return today;
+                },
+                ScheduleTrip(){
+                    axios
+                    .post(this.url.GetJourney)
+                    .then( response => {
+                        this.ScheduleTrips = response.data
+
+                        var $prevGroup, prevGroupName;
+                    var option;
+                    var number = 0;
+                    $.each(response.data, function () {
+                        if (prevGroupName != this.DepartCountry) {
+                            $prevGroup = $('<optgroup />').prop('label', this.DepartCountry).appendTo('.TripJourneyAll');
+
+                        }
+
+
+                        $("<option />").val(number).text(this.JourneyName).appendTo($prevGroup);
+                        prevGroupName = this.DepartCountry;
+                        number++;
+
+                    });
+
+                });
+            },
+                    GetJourneyType(e){
+                        if(e == 2){
+                            this.show.WrapperReturnTrips = true;
+                            this.show.ReturnTripsTax = true;
+                            this.show.btnDepart = false;
+                            this.form.payments.isIncludeReturnTax = true;
+                            this.form.journey.TravelDateReturn =  this.form.journey.TravelDateDepart;
+                            this.GetDepartJourney();
+
+                        }
+                        else{
+                            this.show.WrapperReturnTrips = false;
+                            this.show.ReturnTripsTax = false;
+                            this.show.btnDepart = true;
+                            this.form.payments.isIncludeReturnTax = false;
+                            this.ClearReturn();
+
+                        }
+
+                    },
+                    GetScheduleDepart(){
+                        var a = $("#DepartJourney").val();
+                        var i = 0;
+
+                        this.form.journey.DepartTrips = this.ScheduleTrips[a];
+                        var b = this.form.journey.DepartTrips;
+                        if(this.form.journeyType == 2){
+                            this.form.journey.TravelDateReturn =  this.form.journey.TravelDateDepart;
+
+                            for(i; i < this.ScheduleTrips.length; i++){
+                                if(this.ScheduleTrips[i].DepartPort == b.ArrivalPort && this.ScheduleTrips[i].ArrivalPort == b.DepartPort ){
+                                    $("#ReturnJourney").val(i);
+                                    this.form.journey.ReturnTrips = this.ScheduleTrips[i];
+
+                                }
+                            }
+                        }
+
+
+                    },
+                    GetDepartJourney(){
+                        var b = this.form.journey.DepartTrips;
+
+                        var i = 0;
+                        for(i; i < this.ScheduleTrips.length; i++){
+                            if(this.ScheduleTrips[i].DepartPort == b.ArrivalPort && this.ScheduleTrips[i].ArrivalPort == b.DepartPort ){
+                                $("#ReturnJourney").val(i);
+                                this.form.journey.ReturnTrips = this.ScheduleTrips[i];
+
+                            }
+                        }
+
+
+
+                    },
+                    GetScheduleReturn(){
+                        var a = $("#ReturnJourney").val();
+                        this.form.journey.ReturnTrips = this.ScheduleTrips[a];
+
+
+
+                    },
+                    ClearReturn(){
+                        this.form.journey.ReturnTrips = {};
+                        this.form.journey.TravelDateReturn =  null;
+
+                    },
+                    GoDepart(){
+                        this.show.tableScheduleDepart = false;
+                        this.show.tableScheduleReturn = false;
+                        this.show.loaderAxios = true;
+                        this.ClearSelectedSchedule();
+
+
+                        axios
+                        .post(this.url.GetSchedule, {
+                            TotalPax : "3",
+                            JourneyType : this.form.journeyType,
+                            IsReturnOpenTicket : 0,
+                            DepartPort :  this.form.journey.DepartTrips.DepartPort,
+                            ArrivalPort : this.form.journey.DepartTrips.ArrivalPort,
+                            TravelDateBC :  this.form.journey.TravelDateDepart,
+                            ReturnDepartPort : this.form.journey.ReturnTrips.DepartPort,
+                            ReturnArrivalPort : this.form.journey.ReturnTrips.ArrivalPort,
+                            ReturnTravelDateBC : this.form.journey.TravelDateReturn,
+
+                        })
+                        .then( response => {
+
+                        this.TripSchedules.DepartTrips = response.data[0].DepartTrips;
+                        this.TripSchedules.Price = response.data[0].Price;
+                        this.TripSchedules.ReturnTrips = response.data[0].ReturnTrips;
+
+
+                        if(this.TripSchedules.Price.length < 2){
+                            this.form.journeySelected.Price = this.TripSchedules.Price[0];
+                        }
+
+                        if(this.form.journeyType == 2){
+                            this.show.tableScheduleReturn = true;
+                        }
+                        this.show.tableScheduleDepart = true;
+                        this.show.loaderAxios = false;
+                    });
+
+            this.disabledBtnPassanger();
+            },
+
+                    SelectedDepartTime(e){
+
+                        this.classe.DepartTimeTr = e;
+                        this.form.journeySelected.DepartTrips = this.TripSchedules.DepartTrips[e];
+                        this.disabledBtnPassanger();
+                    },
+                    SelectedReturnTime(e){
+
+                        this.classe.ReturnTimeTr = e;
+                        this.form.journeySelected.ReturnTrips = this.TripSchedules.ReturnTrips[e];
+                        this.disabledBtnPassanger();
+                    },
+                    SelectedPrice(e){
+
+                        this.form.journeySelected.Price = this.TripSchedules.Price[e];
+                        this.disabledBtnPassanger();
+                    },
+
+                    disabledBtnPassanger(){
+                        var Depart = this.form.journeySelected.DepartTrips;
+                        var Return  = this.form.journeySelected.ReturnTrips;
+                        var Price  = this.form.journeySelected.Price;
+                    
+
+                        if(this.form.journeyType == 1){
+                            if(Depart == null || Price == null){
+                                this.disabled.addPassanger = false
+                            }
+                            else{
+                                this.disabled.addPassanger = true
+                            }
+                        }
+                        else if(this.form.journeyType == 2){
+                            if(Depart == null || Price == null || Return == null){
+                                this.disabled.addPassanger = false
+                            }
+                            else{
+                                this.disabled.addPassanger = true
+                           
+                            }
+                        }
+
+                    },
+                    ClearSelectedSchedule(){
+                        this.classe.DepartTimeTr = null;
+                        this.classe.ReturnTimeTr = null;
+                        this.form.journeySelected.DepartTrips = null;
+                        this.form.journeySelected.ReturnTrips = null;
+                        this.form.journeySelected.Price = null;
+                    },
+                
+                    AddBooking(){
+                        let loader = this.$loading.show({
+                            loader: 'bars',
+                            color: 'blue',
+
+                        });
+                        var NewData = [{
+                            agent : {
+                                agent: this.form.agent,
+                                bookingName: this.form.bookingName,
+                                bookingCode : "",
+                                remark: this.form.remark,
+                                journeyType: this.form.journeyType,
+                                payments:{
+                                    isIncludeTicketPrice: this.form.payments.isIncludeTicketPrice,
+                                    isIncludeDepartTax: this.form.payments.isIncludeDepartTax,
+                                    isIncludeReturnTax: this.form.payments.isIncludeReturnTax,
+                                    IsReturnOpenTicket: this.form.payments.IsReturnOpenTicket
+                                },
+                            },
+                            DepartTrips : this.form.journeySelected.DepartTrips,
+                            ReturnTrips : this.form.journeySelected.ReturnTrips,
+                            passanger : [],
+                            price : this.form.journeySelected.Price,
+                            created : {
+                                date : this.FormatedDateWithDays(new Date()),
+                                status : "pending"
+                             }
+                        }]
+
+                  
+                        axios
+                            .post(this.url.AddBooking, {
+                                dataJSon : JSON.stringify(NewData),
+
+                            })
+                            .then( response => {
+                                loader.hide();
+                                window.location = "PendingBooking/"+ response.data;
+                            });
+                    }
+
+            }
+        });
+
+    </script>
+
+}
+
+
+
+<div id="VueApp">
+
+    <div class="content-mff">
+
+        <div class="row">
+            <div class="col-md-10">
+                <h2 class="text-warning text-bold">Form Booking</h2>
+            </div>
+
+        </div>
+        <div class="col-md-12">
+            <div class="row">
+                <div class="panel panel-bordered panel-primary">
+                    <div class="panel-body">
+                        <form id="PendingForm">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>Agent</label>
+                                        <input type="text" name="agent" class="form-control" v-model="form.agent" />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Booking Name</label>
+                                        <input type="text" name="bookingName" class="form-control" v-model="form.bookingName" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Remark</label>
+                                        <textarea name="Remark" class="form-control" rows="4" v-modal="form.remark"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input type="radio" name="JourneyType" v-model="form.journeyType" value="1" checked v-on:click="GetJourneyType(1)">
+                                            <span class="text-bold"> One Way </span>
+                                        </label>
+                                        &nbsp;&nbsp;&nbsp;
+                                        <label class="form-check-label">
+                                            <input type="radio" name="JourneyType" v-model="form.journeyType" value="2" v-on:click="GetJourneyType(2)">
+                                            <span class="text-bold"> Round Trip</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <label class="col-md-3 row text-size-large text-bold">Payment : </label>
+                                        <div class="col-md-9">
+                                            <div class="form-check">
+                                                <label class="form-check-label">
+                                                    <input type="checkbox" name="isIncludeTicketPrice" v-model="form.payments.isIncludeTicketPrice" checked="checked">
+                                                    Include Ticket Price
+                                                </label>
+                                                &nbsp; &nbsp;
+                                                <label class="form-check-label">
+                                                    <input type="checkbox" name="isIncludeDepartTax" v-model="form.payments.isIncludeDepartTax" checked="checked">
+                                                    Depart Fee
+                                                </label>
+                                                &nbsp; &nbsp;
+                                                <span class="isIncludeReturnTax" v-show="show.ReturnTripsTax">
+                                                    <label class="form-check-label">
+                                                        <input type="checkbox" name="isIncludeReturnTax" v-model="form.payments.isIncludeReturnTax">
+                                                        Return Fee
+                                                    </label>
+                                                </span>
+
+                                            </div>
+
+                                            <div class="form-check">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-6 DepartTrip">
+
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <div class="form-group">
+                                                <label class="text-bold">Travel Date</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon"><i class="icon-calendar22"></i></span>
+                                                    <input type="text" name="travelDate" class="form-control pickadate-selectors"
+                                                           value="@DateTime.Now.ToString("dddd, dd MMMM yyyy")"
+                                                           id="DepartTravelDate" />
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <div class="form-group">
+                                                <label class="text-bold" data-popup="tooltip" title="Left tooltip" data-placement="left">Trip</label>
+                                                <select name="Trip" class="form-control TripJourneyAll" id="DepartJourney" v-on:change="GetScheduleDepart()">
+                                                    <option value="picks">--== Select Trips ==--</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label>&nbsp;</label>
+                                                <input type="button" class="form-control btn btn-primary" value="Go" v-show="show.btnDepart" v-on:click="GoDepart()">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="loader" v-show="show.loaderAxios">Loading...</div>
+                                    <table class="table table-striped table-bordered DepartTableTime table-hover-mff" v-show="show.tableScheduleDepart">
+                                        <thead>
+                                            <tr class="table-primary">
+                                                <td class="text-center" width="80">Time</td>
+                                                <td class="text-center" width="120">Class</td>
+                                                <td class="text-center" width="150">Quota Left</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="text-center">
+                                            <tr v-for="(d, index) in TripSchedules.DepartTrips"
+                                                v-on:click="SelectedDepartTime(index)"
+                                                v-bind:class="{ 'selected' : classe.DepartTimeTr === index}" v-bind:key="index">
+                                                <td>{{d.TravelTime}}</td>
+                                                <td>{{d.SeatCategory}}</td>
+                                                <td>0</td>
+
+                                            </tr>
+                                        </tbody>
+
+                                    </table>
+                                </div>
+
+                                <div class="col-md-6 ReturnTrip" v-show="show.WrapperReturnTrips">
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <div class="form-group">
+                                                <label class="text-bold">Travel Date</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon"><i class="icon-calendar22"></i></span>
+                                                    <input type="text" name="travelDate" class="form-control" value="@DateTime.Now.ToString("dddd, dd MMMM yyyy")" id="ReturnTravelDate" v-model="form.journey.TravelDateReturn" />
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <div class="form-group">
+                                                <label class="text-bold">
+                                                    Return Trip &nbsp;&nbsp;
+                                                    <span class="label label-info CheckOpenTicket" style="margin-top:-15px">
+                                                        <input type="checkbox" class="" name="IsReturnOpenTicket" v-model="form.payments.IsReturnOpenTicket" />
+                                                        &nbsp; open ticket
+                                                    </span>
+                                                </label>
+                                                <select name="Trip" class="form-control TripJourneyAll" id="ReturnJourney" v-on:change="GetScheduleReturn()">
+                                                    <option value="">--== Select Trips ==--</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label>&nbsp;</label>
+                                                <input type="button" class="form-control btn btn-primary" value="Go" v-on:click="GoDepart()" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="loader" v-show="show.loaderAxios">Loading...</div>
+                                    <table class="table table-striped table-bordered ReturnTableTime table-hover-mff" v-show="show.tableScheduleReturn">
+                                        <thead>
+                                            <tr class="table-primary">
+                                                <td class="text-center" width="80">Time</td>
+                                                <td class="text-center" width="120">Class</td>
+                                                <td class="text-center" width="150">Quota Left</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="text-center">
+                                            <tr v-for="(d, index) in TripSchedules.ReturnTrips"
+                                                v-on:click="SelectedReturnTime(index)"
+                                                v-bind:class="{ 'selected' : classe.ReturnTimeTr === index}" v-bind:key="index">
+                                                <td>{{d.TravelTime}}</td>
+                                                <td>{{d.SeatCategory}}</td>
+                                                <td>0</td>
+
+                                            </tr>
+
+                                        </tbody>
+
+
+                                    </table>
+
+                                </div>
+                            </div>
+
+
+
+                            <br />
+                            <div class="row">
+                                <div class="col-md-10 PriceRadio">
+                                    <div class="form-check" v-for="(d, index) in TripSchedules.Price">
+                                        <label class="form-check-label">
+                                            <input type="radio" v-model="form.journeySelected.Price" v-bind:value="d" v-on:click="SelectedPrice(index)">
+                                            <span class="text-bold"> {{d.PriceName}} </span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <hr />
+                                <button type="button" class="btn btn-primary" v-on:click="AddBooking()" v-bind:disabled="disabled.addPassanger ? false : true">Add Passenger</button>
+                            </div>
+
+                        </form>
+                     
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
