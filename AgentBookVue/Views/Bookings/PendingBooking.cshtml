@@ -765,60 +765,66 @@
             },
 
 
-                ChangeTrip(e, a){
-                    var dataTrips;
-                    if(e == 'ReturnTrip'){
-                        dataTrips = this.pending.passanger[a].ReturnTrip
-                    }
-                    else{
-                        dataTrips = this.pending.passanger[a].DepartTrip;
-                    }
+                ChangeTrip(e, a, c){
+
+                    if(c != false){
+
+                    
+
+                        var dataTrips;
+                        if(e == 'ReturnTrip'){
+                            dataTrips = this.pending.passanger[a].ReturnTrip
+                        }
+                        else{
+                            dataTrips = this.pending.passanger[a].DepartTrip;
+                        }
             
-                    let dateTravel = this.FormatedDateWithDays(dataTrips.TravelDate);
-                    let Schedule = this.ScheduleTrips;
-                    let todayDate = new Date();
-                    let todayTime = todayDate.getHours()+":"+todayDate.getMinutes();
-                    this.Travel.TravelDate = dateTravel;
-                    this.Travel.TripsPending = dataTrips;
-                    this.Travel.TravelTime = dataTrips.TravelTime;
+                        let dateTravel = this.FormatedDateWithDays(dataTrips.TravelDate);
+                        let Schedule = this.ScheduleTrips;
+                        let todayDate = new Date();
+                        let todayTime = todayDate.getHours()+":"+todayDate.getMinutes();
+                        this.Travel.TravelDate = dateTravel;
+                        this.Travel.TripsPending = dataTrips;
+                        this.Travel.TravelTime = dataTrips.TravelTime;
 
-                    //if( todayTime > dataTrips.TravelTime){
-                    //    this.show.tableSchedule = false;
-                    //}
-                    //else{
-                    //    this.show.tableSchedule = true;
-                    //}
+                        //if( todayTime > dataTrips.TravelTime){
+                        //    this.show.tableSchedule = false;
+                        //}
+                        //else{
+                        //    this.show.tableSchedule = true;
+                        //}
 
-                    this.show.tableSchedule = true;
-                    for(let i =0; i < Schedule.length; i++){
-                        if(Schedule[i].JourneyName == dataTrips.JourneyName){
-                            this.Travel.Journey = Schedule[i];
-                            $(".TripJourneyAll").val(i);
+                        this.show.tableSchedule = true;
+                        for(let i =0; i < Schedule.length; i++){
+                            if(Schedule[i].JourneyName == dataTrips.JourneyName){
+                                this.Travel.Journey = Schedule[i];
+                                $(".TripJourneyAll").val(i);
                            
-                        }
+                            }
                         
-                    }
-                    this.GetScheduleTrips();
-                   
-                    let TravelSchedule = this.Travel.Schedule;
-                    for(let i = 0; i < TravelSchedule.length; i++){
-                        if(TravelSchedule[i].TravelTime == dataTrips.TravelTime){
-                            this.Travel.classe = i;
                         }
-                    }
-                    $("#TravelDate").val(dateTravel);
+                        this.GetScheduleTrips();
+                   
+                        let TravelSchedule = this.Travel.Schedule;
+                        for(let i = 0; i < TravelSchedule.length; i++){
+                            if(TravelSchedule[i].TravelTime == dataTrips.TravelTime){
+                                this.Travel.classe = i;
+                            }
+                        }
+                        $("#TravelDate").val(dateTravel);
                    
                     
 
                     
                     
                     
-                    $("#ChangeTrip").modal({
-                        fadeDuration: 300,
-                        fadeDelay: 0.50,
-                        closeExisting: false,
-                        showClose: false
-                    });
+                        $("#ChangeTrip").modal({
+                            fadeDuration: 300,
+                            fadeDelay: 0.50,
+                            closeExisting: false,
+                            showClose: false
+                        });
+                    }
 
                 },
                 SelectScheduleTime(e){
@@ -1058,13 +1064,13 @@
                                         }" />
                             </td>
                             <td>{{journeyTypeName}}</td>
-                            <td class="text-bold" v-bind:class="{'DRColor' : pp.ShowInput }" v-on:click="ChangeTrip('DepartTrip', index)">
+                            <td class="text-bold" v-bind:class="{'DRColor' : pp.ShowInput }" v-on:click="ChangeTrip('DepartTrip', index, pp.ShowInput)">
                                 {{pp.DepartTrip.TravelDate}},
                                 {{pp.DepartTrip.TravelTime}},
                                 {{pp.DepartTrip.JourneyName}}
                                 ({{pp.DepartTrip.SeatCategory}})
                             </td>
-                            <td class="text-bold" v-bind:class="{'DRColor' : pp.ShowInput }" v-if="show.ReturnTrips" v-show="show.ReturnTrips" v-on:click="ChangeTrip('ReturnTrip', index)">
+                            <td class="text-bold" v-bind:class="{'DRColor' : pp.ShowInput }" v-if="show.ReturnTrips" v-show="show.ReturnTrips" v-on:click="ChangeTrip('ReturnTrip', index, pp.ShowInput)">
                                 {{pp.ReturnTrip.TravelDate}},
                                 {{pp.ReturnTrip.TravelTime}},
                                 {{pp.ReturnTrip.JourneyName}}

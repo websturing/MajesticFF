@@ -556,5 +556,160 @@
       "date": "Sunday, 15 September 2019",
       "status": "pending"
     }
+  },
+  {
+    "agent": {
+      "agent": "jhghjg",
+      "bookingName": "hgfdhg",
+      "bookingCode": "",
+      "remark": null,
+      "journeyType": "2",
+      "payments": {
+        "isIncludeTicketPrice": true,
+        "isIncludeDepartTax": true,
+        "isIncludeReturnTax": true,
+        "IsReturnOpenTicket": false
+      }
+    },
+    "DepartTrips": {
+      "JourneyCode": "HBF to SKP",
+      "JourneyName": "HarbourFront to Sekupang",
+      "TravelDate": "2019-09-21",
+      "TravelTime": "09:45",
+      "TripCode": "HS201909210945",
+      "SeatCategory": "Economy",
+      "Capacity": "148",
+      "SpecialPrice": null
+    },
+    "ReturnTrips": {
+      "JourneyCode": "SKP to HBF",
+      "JourneyName": "Sekupang to HarbourFront",
+      "TravelDate": "2019-09-21",
+      "TravelTime": "18:00",
+      "TripCode": "SH201909211800",
+      "SeatCategory": "Economy",
+      "Capacity": "148",
+      "SpecialPrice": null
+    },
+    "passanger": [
+      {
+        "passportNo": "B890123",
+        "passportName": "AFRIANDI",
+        "BirthDate": "07/20/1995",
+        "Gender": "Male",
+        "Nationality": "Indonesian",
+        "Issuedate": "08/12/2017",
+        "ExpireDate": "08/12/2020",
+        "DepartTrip": {
+          "JourneyCode": "HBF to SKP",
+          "JourneyName": "HarbourFront to Sekupang",
+          "TravelDate": "2019-09-21",
+          "TravelTime": "09:45",
+          "TripCode": "HS201909210945",
+          "SeatCategory": "Economy",
+          "Capacity": "148",
+          "SpecialPrice": null
+        },
+        "ReturnTrip": {
+          "JourneyCode": "SKP to HBF",
+          "JourneyName": "Sekupang to HarbourFront",
+          "TravelDate": "2019-09-21",
+          "TravelTime": "18:00",
+          "TripCode": "SH201909211800",
+          "SeatCategory": "Economy",
+          "Capacity": "148",
+          "SpecialPrice": null
+        },
+        "ShowInput": false,
+        "ShowText": true,
+        "error": {
+          "BirthDate": false,
+          "ExpireDate": false,
+          "Issuedate": false
+        }
+      },
+      {
+        "passportNo": "A1234120",
+        "passportName": "ISNAWATI edit",
+        "BirthDate": "07/20/1999",
+        "Gender": "Female",
+        "Nationality": "Malaysian",
+        "Issuedate": "08/12/2018",
+        "ExpireDate": "08/12/2021",
+        "DepartTrip": {
+          "JourneyCode": "HBF to SKP",
+          "JourneyName": "HarbourFront to Sekupang",
+          "TravelDate": "2019-09-21",
+          "TravelTime": "09:45",
+          "TripCode": "HS201909210945",
+          "SeatCategory": "Economy",
+          "Capacity": "148",
+          "SpecialPrice": null
+        },
+        "ReturnTrip": {
+          "JourneyCode": "SKP to HBF",
+          "JourneyName": "Sekupang to HarbourFront",
+          "TravelDate": "2019-09-21",
+          "TravelTime": "18:00",
+          "TripCode": "SH201909211800",
+          "SeatCategory": "Economy",
+          "Capacity": "148",
+          "SpecialPrice": null
+        }
+      },
+      {
+        "passportNo": "b78979",
+        "passportName": "hgfhgfh",
+        "BirthDate": "09/20/1997",
+        "Gender": "Female",
+        "Nationality": "Azerbaijan",
+        "Issuedate": "09/20/2019",
+        "ExpireDate": "09/26/2019",
+        "DepartTrip": {
+          "JourneyCode": "HBF to SKP",
+          "JourneyName": "HarbourFront to Sekupang",
+          "TravelDate": "2019-09-21",
+          "TravelTime": "09:45",
+          "TripCode": "HS201909210945",
+          "SeatCategory": "Economy",
+          "Capacity": "148",
+          "SpecialPrice": null
+        },
+        "ReturnTrip": {
+          "JourneyCode": "SKP to HBF",
+          "JourneyName": "Sekupang to HarbourFront",
+          "TravelDate": "2019-09-21",
+          "TravelTime": "18:00",
+          "TripCode": "SH201909211800",
+          "SeatCategory": "Economy",
+          "Capacity": "148",
+          "SpecialPrice": null
+        },
+        "ShowInput": false,
+        "ShowText": true,
+        "error": {
+          "BirthDate": false,
+          "ExpireDate": false,
+          "Issuedate": false
+        }
+      }
+    ],
+    "price": {
+      "PriceTitle": "2-WAY BTM",
+      "PriceName": "BTM Ticket - Two-Way Adult Economy ALL Passport",
+      "PriceCode": "FrontDesk0002SG211012ALLBASE",
+      "Price": "SGD 49.00",
+      "JourneyType": "2",
+      "Category": "Adult",
+      "SeatCategory": "Economy",
+      "ApplicablePassport": "ALL",
+      "TicketName": "BTM Ticket",
+      "TicketType": "BASE",
+      "DepartCountry": "SINGAPORE"
+    },
+    "created": {
+      "date": "Friday, 20 September 2019",
+      "status": "pending"
+    }
   }
 ]
